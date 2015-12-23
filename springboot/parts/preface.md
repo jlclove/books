@@ -23,11 +23,13 @@ Spring Boot 使得创建独立的、基于Spring Framework的生产级应用更�
 * 尽可能的自动配置Spring(有时省心，有时苦恼）
 * 无需XML配置，没有代码生成。
 * 提供了一些生产环境即用的特性，比如，metrics,heath check 和外部配置支持。
-* ...Just Read ..
+* ... ..
 
 ###读者受众
 有实际Spring项目开发经验的工程师。
-
+### 约定与说明
+本书示例默认编译运行环境为JRE8，项目使用Maven构建。
+Spring BOOT 版本为1.3.0，JAVA运行环境最低要求为JRE6。
 ###章节结构
 
 
