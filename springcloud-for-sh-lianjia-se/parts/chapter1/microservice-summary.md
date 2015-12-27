@@ -2,7 +2,6 @@
 关于微服务的讨论，可以参考： [Martin Fowler - MircroServices](http://martinfowler.com/articles/microservices.html "martinfowler microservices")。
 
 站在工程师的角度看，微服务涉及三种角色：
-//todo 流程图  
 
 * Service SPI [^1]   服务契约
 * Sevice Provider 服务实现方
@@ -34,7 +33,7 @@
 
 对客户端来说，如果我要萝卜，服务方给它萝卜即可，至于萝卜是从何而来，客户端是不关心的。反观我们采用“**硬引用**”的方式暴露服务时，将实现方式直接驻留在了客户端，从而变相地和客户端耦合在了一起。
 
-基于微服务的方式开发时，项目线（Service Provider）只向客户端(Consumer)提供 **Service SPI**。SPI只是一系列声明（各种接口和Model），没有任何实现细节，驻留在客户端的只是一个空壳，真身仍在项目线。
+基于微服务的架构开发时，项目线（Service Provider）只向客户端(Consumer)提供 **Service SPI**。SPI只是一系列声明（各种接口和Model），没有任何实现细节，驻留在客户端的只是一个空壳，真身仍在项目线。
 
 如果某服务声明说我有（返回）萝卜，那客户端就能获取萝卜，绝无可能冒出白菜（所谓的契约）。至于萝卜的制造工艺，各项目线可随时变更，只要不违背契约即可（通常服务都有版本号）。
 
@@ -51,21 +50,21 @@
 一次典型的针对微服务的方法调用，其背后的基本步骤如下：  
 
 	 1. 服务发现 - 根据所调用的服务查找Service Provider的所有可用节点；
-	 2. 服务路由 - 从众多节点根据特定的规则选择一个节点。
+	 2. 服务路由 - 从众多节点以某种规则选择一个节点。
 	 3. RPC请求 - 向选定的节点发起远程网络调用(RPC)，解析返回数据。
  
 由于网络调用的复杂性，我们还必须处理RPC[^3]请求异常时可能导致的雪崩效应[^4]，所以流量整形[^5]和监控是必要的。
 
 另外，由于部署多个节点，如何管理应用程序的环境配置也是必须考虑的。
 
-针对以上这些基本需求，Spring团队整合了一种解决方案：Spring Cloud + Netflix OSS。
+针对以上的这些基本需求，Spring团队整合了一种解决方案：Spring Cloud + Netflix OSS。
 
 ####服务发现 - Eureka
 [Netflix Eureka 1.X.X](https://github.com/Netflix/eureka/wiki "Eureka Wiki") 使用了一种简单机制实现了节点的自动注册和发现。
 
 Eureka 有两种角色：Eureka Client 和 Eureka Server。通常我们的Spring Cloud 程序（服务）都是作为Eureka Client启动的。 
 
-Eureka Client启动时，会根据其配置的 Eureka Server的Url，主动向Eureka Server汇报以下信息：
+Eureka Client启动时，会根据其配置的 Eureka Server的Url，主动向Eureka Server汇报自身以下信息：
 
 *  **虚拟主机地址（VIPAddress）**   
 	服务的标识，极其重要，只有根据VIPAddress才能在Eureka Server中查找服务的节点。
@@ -74,7 +73,7 @@ Eureka Client启动时，会根据其配置的 Eureka Server的Url，主动向Eu
 *  **端口**   
 节点对外提供服务的端口
 *  **节点实例ID**    
-全局唯一，如果重复，会覆盖之前注册的相同实例ID的节点信息。
+全局唯一，如果重复，会覆盖之前注册相同实例ID的节点信息。
 *  status url   
 程序运行状态的监控url.
 *  health url   
@@ -86,17 +85,17 @@ Eureka Client启动时，会根据其配置的 Eureka Server的Url，主动向Eu
 
 Eureka Server(1.X.X)目前不支持向所有节点广播节点变更，节点的自动发现主要依赖Eureka Client定时Poll数据。
 
-默认情况下，Eureka Client的实例ID为主机名，这样同一个台机器只能运行一个Client。但通过Spring，我们可以让Eureka Client启动时生成随机的Instance Id。
+默认情况下，Eureka Client的实例ID为主机名，这样同一个台机器只能运行一个Client。通过Spring，我们可以让Eureka Client启动时生成随机的Instance Id。
 
 SE团队集目前部署了两个Eureka Server节点（集成环境）：
 [http://discovery1.se.dooioo.org](http://discovery1.se.dooioo.org) 和[http://discovery2.se.dooioo.org](http://discovery2.se.dooioo.org)，正式环境将顶级域名.org 改为.com，访问即可查看所有已注册的Eureka Client。
 
 #### 服务路由 - Ribbon
-当Eureka Client通过特定服务的**VIPAddress**获得多个节点时，如何路由到一个合适的节点？这时轮到Netflix开源组件 [Ribbon](https://github.com/Netflix/ribbon/wiki "Netflix Ribbon Wiki") 出场了。
+当Eureka Client通过待调用服务的**VIPAddress**获得该服务的多个节点时，如何路由到一个合适的节点？这时轮到Netflix的开源组件 [Ribbon](https://github.com/Netflix/ribbon/wiki "Netflix Ribbon Wiki") 出场了。
 
 Ribbon 有以下特性：
 
-* 插件式的路由规则，内置Round Robin 和 Response time weighted 。既可以向节点随机分发请求，也支持根据响应时间来分发。另外，我们可以方便地扩展一些符合自己应用场景的路由规则。
+* 插件式的路由规则，内置Round Robin 和 Response time weighted 。既可以向节点随机分发请求，也支持根据响应时间来分发。另外，我们也可以方便地扩展一些符合自己应用场景的路由规则。
 * 集成Eureka服务发现（Ribbon-Eureka模块）。
 * 弹性容错。Ribbon通过`IPing`接口可以动态感知节点是否存活，以过滤一些失去响应的节点。它可以进一步基于断路器[^6]模式过滤节点。关于断路器模式，请参考 [Circuit Breaker](http://martinfowler.com/bliki/CircuitBreaker.html)。
 * 支持分布式云环境。假如，我们将服务部署到阿里云不同的数据中心，比如，北京，杭州，上海，节点路由时，可以优先选择位于同一数据中心的节点，也可以主动避开网络拥堵的数据中心。
@@ -112,7 +111,7 @@ Ribbon 有以下特性：
 
 而完成这一RPC调用的组件，就是 [Netflix Feign](https://github.com/Netflix/feign)。
 
-Feign 根据 Service SPI 接口的标注信息，构造符合Http协议的请求参数。你可以把Feign看成一个HttpClient，只不过它构造Http请求是通过标注声明的元数据。比如，我们以后的Service SPI类似以下代码：
+Feign 根据 Service SPI 接口的标注信息，构造符合Http协议的请求参数。你可以把Feign看成一个HttpClient，只不过它构造Http请求是通过接口标注声明的元数据。比如，我们以后的Service SPI类似以下代码：
 
 ```java
 @FeignClient("city")
@@ -135,7 +134,7 @@ Service SPI的每个接口都将被Feign代理（JAVA 动态代理），当方�
 
 但我们也可以直接指定请求的url：`@FeignClient(url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/city/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
 
-Url的主机地址被动态解析和替换之后，开始发送请求，最后对响应信息反序列化。
+Url的主机地址被动态解析和替换之后，Feign开始发送请求，最后对响应信息反序列化。
 
 #### 流量整形以及断路器
 正常情况下，一次完整的RPC请求如上文所言。
@@ -156,7 +155,7 @@ Url的主机地址被动态解析和替换之后，开始发送请求，最后�
 
 下面我简要介绍一下Hystrix的工作流程：
 
-1,将所有对外部系统的调用封装在成`HystrixCommand` 或 `HystrixObservableCommand` ，并运行在一个隔离的线程中。  
+1,将所有对外部系统的调用封装成`HystrixCommand` 或 `HystrixObservableCommand` ，并运行在一个隔离的线程中。  
 比如，当我们发起远程调用时，如果启用Hystrix，则实际的调用如下：
 
 ```java
@@ -173,7 +172,7 @@ Url的主机地址被动态解析和替换之后，开始发送请求，最后�
 
 4，收集请求成功、失败、超时以及池满被拒绝的请求数。
 
-5，根据收集到的统计数据，周期性地触发断路器。当断路器开启时，接下来的所有请求都会被终止转发。断路器可以手动触发或者当请求的错误率（errorThresholdPercentage，可配置，默认%50）达到一定阈值时自动触发。
+5，根据收集到的统计数据，周期性地触发断路器。当断路器开启时，接下来的所有请求都会被直接拒绝。断路器可以手动触发或者当请求的错误率（errorThresholdPercentage，可配置，默认%50）达到一定阈值时自动触发。
 断路器开启一段时间之后（sleepWindowInMilliseconds,可配置，默认5秒），会自动关闭。也就是说如果断路器开启，那么默认5秒内不会向外部依赖发送请求。
 
 6，当请求失败、池满被拒绝、超时以及短路（断路器开启）时，`HystrixCommand`将执行一个默认逻辑。HystrixCommand有个`getFallback`方法，当失败时，你可以返回默认数据。
@@ -188,7 +187,7 @@ Url的主机地址被动态解析和替换之后，开始发送请求，最后�
 #### 智能代理 Zuul
 对企业内部服务调用来说，以上的 Eureka & Ribbon & Feign & Hystrix 基本就满足应用了。
 
-但如果我前端Web页面想Ajax访问内部服务呢？或者我们要暴露一些基础服务给移动端呢？
+但如果前端Web页面想Ajax访问内部服务呢？或者我们要暴露一些基础服务给移动端呢？
 
 之前，各个项目线有单独的API模块。部署之后，Nginx配好指向，Web等就可以通过域名访问接口了。
 
@@ -228,7 +227,7 @@ public interface CityService{
 ```
 如果由Zuul代理，则请求Zuul的Path必须为：/loupan-server/v1/city/{id}。
 
-我们的Zuul项目会将以'-'连起来的虚拟主机地址转为‘/’分隔的路径，对于：
+我们的Zuul项目会把以'-'连起来的虚拟主机地址转为‘/’分隔的路径，对于：
 /loupan-server/v1/city/{id}，客户端也可以访问：/loupan/server/v1/city/{id}。
 
 **我们称“loupan/server”为虚拟主机地址 “loupan-server”的别名**。
@@ -244,17 +243,17 @@ SE团队Zuul项目的域名为（集成环境）：[http://api.route.dooioo.org]
 
 2，请求到达Zuul，首先类型为 “pre” 的Zuul Filter找到别名"/loupan/server"对应的虚拟主机地址："loupan-server"，并标识请求为Eureka，将虚拟主机地址放在 `RequestContext`中。
 
-3，接下来类型为 "route" 的Zuul Filter发现`RequestContext`有虚拟主机地址，开始使用Ribbon以某种路由规则选定服务的一个节点，在移除虚拟主机地址或别名后发送请求。此时后端接受到的请求如下：
-> GET http://selected-node:8080/v1/city/32
+3，接下来类型为 "route" 的Zuul Filter发现`RequestContext`有虚拟主机地址，开始使用Ribbon以某种路由规则选定服务的一个节点，移除虚拟主机地址或别名后发送请求。此时后端接受到的请求如下：
+> GET http://selected-node:port/v1/city/32
 
 4，后端节点响应后，类型为 “post”的Zuul Filter将响应写入客户端。
 
 5，以上任何一步发生异常，都会调用类型为 “error” 的Zuul Filter。
 
-另外，我们的Zuul代理已经支持CORS，Web Ajax请求已无需考虑跨域的问题了。
+附带说明一点：我们的Zuul代理已支持CORS，Web Ajax请求已无需考虑跨域的问题了。
 
 #### 配置中心 Spring Cloud Config
-对应用配置的管理，Spring Cloud目前实现是使用Git 来集中存储，相关模块为：[Spring-Cloud-Config](http://cloud.spring.io/spring-cloud-config/)。
+对应用配置的管理，Spring Cloud目前默认的实现是使用Git 来集中存储，相关模块为：[Spring-Cloud-Config](http://cloud.spring.io/spring-cloud-config/)。
 
 当Spring Cloud项目启动时，首先会使用`PropertySourceLocator`自动加载远程Git仓库里的配置文件。
 
