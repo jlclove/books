@@ -15,12 +15,12 @@
 
 *  电话转接有两到三个节点，尚未分配的所有转接号就是一个共享资源池（同一个数据库）。
 *  一个转接号只能分配给一个人。
-*  请求可能同时重复发送（可能落在同一节点，也可能落在任一节点），无论请求发送多少次，此人已分配的转接号应该不变（不会重复申请）。
+*  请求可能同时重复发送（可能落在同一节点，也可能落在任一节点），无论请求发送多少次，此人已分配的转接号应该不变（不能重复申请,但每隔三天此人的转接号就要过期）。
 
 当时设计的目标TPS=300/s,平均响应时间应在300ms以下,具体实现分以下几步：
 
 *  节点一启动，首先主动向数据库申请4000个转接号（更新转接号状态为已占用）放在程序内存中，比如 currentPool=`ConcurrentLinkedQueue`，有一个`AtomicInteger`类型的计数器，统计集合中已分配了多少转接号，如果达到某个阈值，再异步向数据库批量申请4000个放在另一个 preparedPool=` ConcurrentLinkedQueue`中，当currentPool分配完或不足时，此时再加锁，执行逻辑：`currentPool=preparedPool,preparedPool=null;`。  
-   这样便将数据库事务转换成Java 并发了，高并发时也能稳定服务。  
+   这样便将数据库事务转换成JAVA并发了，高并发时也能稳定服务。  
 
 * 节点收到员工申请转接号的请求时，先向memcache中添加一个标识位（`memcache#add(key,value,10s)`),类似互斥锁。操作成功之后，开始向currentPool申请转接号，然后缓存到memcache中。  
 
@@ -30,6 +30,8 @@
  可以看到，我使用了memcache来承担全局变量的角色，也存在某种程度的风险。
  在平时的业务实现中，应该尽量在设计上避免此类共享资源的场景。
  
+除了上述的共享资源，还有一种场景我们也应该避免：分布式事务。处理跨系统之间业务逻辑，尽量走异步队列，如果某次业务逻辑处理失败，尽量有重试机制，以保证业务数据最终一致性。
+ 
 * 代码的自我表达能力  
 代码的自我表达能力是一种最佳编码实践。有时候，仅仅是实现方式的稍微调整，比如以下代码是向远程服务器发起Http调用：
  
@@ -37,6 +39,21 @@
 	RemoteRequest  
 	.to(“http://api.route.dooioo.org/loupan/server/v1/city/{id}”)
     .withParam("id",3).get(City.class);
+```
+比如，有时候使用静态内部类（接口），也可使代码更可读：
+
+```java
+  public interace InvocationHandler{
+       Object invoke(some param);
+       
+       static final class Factory{
+         InvocationHandler   create(some param){
+         }
+       }
+  }
+  //调用时
+   new InvocationHandler.Factory();
+  
 ```
 代码编写和写作是类似的，我们既要追求代码简洁，又要追求表达力。
 
@@ -50,7 +67,7 @@ java doc的说明文档请[参考这里](http://www.oracle.com/technetwork/java/
 下面我演示一下标准SPI接口注释的写法：
 <pre><code class=“java”>
 @FeignClient("loupan-server")
-public interface IDistrictService{
+public interface DistrictSpi{
 	/**
 	 * 根据区域ID查找区域，方法的详细说明
 	 * 说明，说明。
@@ -65,7 +82,7 @@ public interface IDistrictService{
 	 * &nbsp;&nbsp;&nbsp;&nbsp;20020=区域巴拉巴拉
 	 */
 	@RequestMapping(value = "/v1/district/{districtId}", method = RequestMethod.GET)
-	District  findDistrict(@PathVariable(value = "districtId") long districtId,@RequestParam(value=“userCode”,required=false,defaultValue=“8080”)Integer userCode);
+	District  findDistrictV1(@PathVariable(value = "districtId") long districtId,@RequestParam(value=“userCode”,required=false,defaultValue=“8080”)Integer userCode);
 }
 </code></pre>
 

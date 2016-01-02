@@ -1,5 +1,5 @@
 ### 项目结构
-对于服务方提供方，一个服务基本分为两个模块：Service SPI ， Service SPI implemention。
+对于服务方提供方，一个服务基本分为两个模块：Service SPI 和Service SPI 实现。
 
 但是请注意，一个业务可能划分多个服务，至于服务的粒度，决定权在各业务线。
 
@@ -11,6 +11,12 @@
 我们的Mini楼盘字典，只演示了一个服务，该项目使用Maven多模块的方式组织代码。
 
 <img src=“file:///Users/gm/git/books/springcloud-for-sh-lianjia-se/parts/chapter1/images/project-modules.png” alt=“Mini楼盘字典模块图” />
+
+推荐服务提供方使用Maven多模块的方式组织项目代码。
+
+##### 模块命名约定
+       
+
 
 
 
