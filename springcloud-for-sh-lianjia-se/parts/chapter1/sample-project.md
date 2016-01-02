@@ -6,7 +6,7 @@
 
 servlet-api 版本为3.0以上（Tomcat 7.x以上已支持）。
 
-Spring Cloud 版本为：Angel.SR4，我们内部支持Jar包lorik-core版本号为：1.1.0，lorik-spi-view版本号： 2.1.0。
+Spring Cloud 版本为：Brixton.M4，我们内部支持Jar包lorik-core版本号为：1.1.0，lorik-spi-view版本号： 2.1.0。
 
 样本项目位置: https://github.com/bookdao/samples.git [[GitHub BookDao](https://github.com/bookdao/samples.git "books sample")]的**springcloud-for-sh-lianjia-se**目录下。
 

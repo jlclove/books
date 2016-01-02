@@ -8,13 +8,12 @@
 另一个参考原则是业务功能的分级，那些业务是关键服务，那些业务是
 辅助业务，以此隔离成几个服务。
 
-我们的Mini楼盘字典，只演示了一个服务，该项目使用Maven多模块的方式组织代码。
+我们的mini楼盘字典，只演示了一个服务，该项目使用Maven多模块的方式组织代码。
 
-<img src=“file:///Users/gm/git/books/springcloud-for-sh-lianjia-se/parts/chapter1/images/project-modules.png” alt=“Mini楼盘字典模块图” />
-
-推荐服务提供方使用Maven多模块的方式组织项目代码。
+![楼盘字典模块图](https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se/parts/chapter1/images/project-modules.png)
 
 ##### 模块命名约定
+那mini
        
 
 
