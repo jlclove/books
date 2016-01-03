@@ -18,8 +18,12 @@ pom.xml如下：
     <artifactId>springcloud-sample</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+  
   <artifactId>loupan-spi</artifactId>
-   <dependencies>
+  <packaging>jar</packaging>
+  <version>1.0.0</version>
+  
+  <dependencies>
       <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
