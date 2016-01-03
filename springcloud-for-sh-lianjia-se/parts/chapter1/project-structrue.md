@@ -6,7 +6,7 @@
 
 * dao层蜕变成了（数据）服务提供方，只有服务提供方负责数据的访问和持久化。
 * service层蜕变成了SPI，声明了一系列接口，定义了标准契约（model)。
-* controller和视图层蜕变成了客户端。客户端有两种方式访问数据，一种是直接依赖SPI 发布的jar，比如 loupan-spi-1.0.1.jar，另一种方式是通过API网关，直接http调用服务，这种通常是前端ajax访问。
+* controller和视图层蜕变成了客户端。客户端有两种方式访问数据，一种是直接依赖SPI 发布的jar，比如 loupan-spi-1.0.1.jar，另一种方式是通过API网关，直接http访问服务，这种通常为web ajax或移动app。
 
 对于服务方提供方，一个服务包含两个模块：Service SPI 和Service SPI的实现。服务提供方应该提供标准服务，保持独立，面向所有客户端。
 
