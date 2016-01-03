@@ -1,7 +1,6 @@
 ### SPI 接口规范 
- SPI接口的规范如下：
- 
-*  供Server实现接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。
+
+*  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。
 * RequestMapping 只能添加在方法上，不能添加在接口上，RequestMapping的value以版本号为前缀(/version/path)，method必须提供并且只能限定为一种，比如：  
 ```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```
  * 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();
@@ -77,7 +76,6 @@ public interface ResblockSpiV1 {
   * @summary
   * @example
   * @errorCode
-  * 
   */
 
 ```

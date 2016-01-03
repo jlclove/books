@@ -1,5 +1,4 @@
 ### Model 规范 
-model比较简单，但有几点规范，必须强调下：
 
 *  所有Model必须实现```java.io.Serializable```, 指明序列化版本号```serialVersionUID```，一般保持默认值即可。
 

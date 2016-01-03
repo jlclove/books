@@ -2,7 +2,7 @@
 切换成微服务之后，和我们之前的开发有何不同呢？
 ![代码架构对照图](https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se/parts/chapter1/images/code-arch-comp.png)
 
-直观上最大的不同就是项目由原来的单个应用划分成了三个项目（模块）：
+直观上最大的不同是项目由原来的单个应用划分成了三个项目（模块）：
 
 * dao层蜕变成了（数据）服务提供方，只有服务提供方负责数据的访问和持久化。
 * service层蜕变成了SPI，声明了一系列接口，定义了标准契约（model)。
@@ -59,10 +59,10 @@
 * loupan-management-ui 系统运行一段时间后，新加了楼盘的运营、管理等web功能。
 
 
-### Parent POM
+### Parent pom.xml
 开发Maven多模块项目时，可以把各模块的公共配置放在Parent项目的pom.xml里。
 
-Spring Cloud为了简化依版本依赖管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为spring-cloud-starter-parent，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
+Spring Cloud为了简化项目版本依赖的管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为spring-cloud-starter-parent，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
 
 **我们采用的Spring Cloud 版本为：Brixton.M4**
 
