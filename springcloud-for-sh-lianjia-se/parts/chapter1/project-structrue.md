@@ -87,13 +87,12 @@ Spring Cloud为了简化项目版本依赖的管理，提供了一系列构建�
 		<version>Brixton.M4</version>
 	</parent>
 	
-  <groupId>com.lianjia.sh.samples</groupId>
-  <artifactId>springcloud-sample</artifactId>
+  <groupId>com.lianjia.sh.samples.loupan</groupId>
+  <artifactId>loupan</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
- <name>mini loupan</name>
- <description>Spring Cloud Sample for SE@sh.lianjia.com</description>
-  
+  <name>loupan</name>
+  <description>Spring Cloud Sample for SE@sh.lianjia.com</description>
   
   <properties>
 		<!--覆盖Spring提供的1.6，指定了项目编译后的class版本 -->
