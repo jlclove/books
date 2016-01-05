@@ -1,9 +1,11 @@
 ### Model 规范 
 
-*  所有Model必须实现```java.io.Serializable```, 指明序列化版本号```serialVersionUID```，一般保持默认值即可。
+*  所有Model必须实现```java.io.Serializable```, 推荐指明序列化版本号```serialVersionUID```，一般保持默认值即可。
 
-* 所有Model必须提供toString()，但equals()和hashCode()看具体业务，不做强制要求。
-* 所有Model字段的Getter方法须提供注释，如果是枚举值、或状态值，须明确列举各个状态的相应说明，但Setter不做要求。  
+* 所有Model必须提供toString()，但equals()和hashCode()看具体业务，不做强制要求。  
+
+* 所有Model字段的Getter方法须提供注释，如果是枚举值、或状态值，须明确列举各个状态的相应说明，但Setter不做要求。   
+ 
 * 所有Model必须提供默认构造函数。
 
 为了简化model的编码工作，特别是大量字段的model，我们之后将提供根据数据库表（建表时要给列添加注释）自动生成SPI model，自动生成注释，使之符合以上规范。

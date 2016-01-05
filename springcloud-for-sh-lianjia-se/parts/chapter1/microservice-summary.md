@@ -4,22 +4,22 @@
 站在工程师的角度看，微服务涉及三种角色：
 
 * Service SPI [^1]   服务契约
-* Sevice Provider 服务实现方，即 Service SPI Implementation
-* Client Consumer 服务调用方，即 SPI 依赖方
+* Service Provider 服务实现方，即 Service SPI Implementation
+* Client 服务调用方，即 SPI 依赖方
 
-服务提供方公布一系列接口（**SPI**），使用Maven发布成jar包，同时，另起一个项目实现SPI。
+服务提供方公布一系列接口（**SPI**），使用Maven构建成jar包，同时，另起一个项目实现SPI（Service Provider)。
 
-对于依赖某个服务的工程师来说，TA只需引入特定版本的**SPI** jar，代码中引入Service 和调用方式并没有什么变化，Spring项目代码如下：
+对于依赖某个服务的工程师来说，TA只需引入特定版本的SPI jar，比如: loupan-spi-1.1.3.jar，代码中引入Service 和调用方式并没有什么变化，Spring项目代码如下：
 
 ```java
   @Service
   public class MyService{
-  	// CityService 为SPI
+  	// CitySpi 为SPI
     @Autowired
-    CityService cityService;
+    CitySpi citySpi;
     
     public List<MyObject> findById(int id){
-       City city= cityService.findById(id);
+       City city= citySpi.findById(id);
        if(city == null){
         return Collections.emptyList();
        }
@@ -35,7 +35,7 @@
 
 对客户端来说，如果我要萝卜，服务方给它萝卜即可，至于萝卜是从何而来，客户端是不关心的。反观我们采用“**硬引用**”的方式暴露服务时，将实现方式直接驻留在了客户端，从而变相地和客户端耦合在了一起。
 
-基于微服务的架构开发时，项目线（Service Provider）只向客户端(Consumer)提供 **Service SPI**。SPI只是一系列声明（各种接口和Model），没有任何实现细节，驻留在客户端的只是一个空壳，真身仍在项目线。
+基于微服务的架构开发时，项目线（Service Provider）只向客户端(Client)提供 **Service SPI**。SPI是一系列声明（接口和Model），没有任何实现细节，驻留在客户端的只是一个空壳，真身仍在项目线。
 
 如果某服务声明说我有（返回）萝卜，那客户端就能获取萝卜，绝无可能冒出白菜（所谓的契约）。至于萝卜的制造工艺，各项目线可随时变更，只要不违背契约即可（通常服务都有版本号）。
 
@@ -45,11 +45,11 @@
 
 ### 微服务、Spring Cloud、Netflix OSS[^2]
 
-上文说到，微服务的方法调用是一种跨JVM进程的调用。也就意味着，微服务离不开分布式系统之间的交互。
+上文说到，微服务的调用是一种跨JVM进程的调用。也就意味着，微服务离不开分布式系统之间的交互。
 
 在一个分布式的环境中，我们通常会部署多个节点（实例），而且可能动态地增加一些节点来应对紧急网络流量。传统的基于Nginx的静态路由（由人工手动配置），显然是不合适的。
 
-一次典型的针对微服务的方法调用，其背后的基本步骤如下：  
+一次典型的微服务调用，其背后的基本步骤如下：  
 
 	 1. 服务发现 - 根据所调用的服务查找Service Provider的所有可用节点；
 	 2. 服务路由 - 从众多节点以某种规则选择一个节点。
@@ -57,16 +57,16 @@
  
 由于网络调用的复杂性，我们还必须处理RPC[^3]请求异常时可能导致的雪崩效应[^4]，所以流量整形[^5]和监控是必要的。
 
-另外，由于部署多个节点，如何管理应用程序的环境配置也是必须考虑的。
+另外，由于部署多个节点，如何管理应用程序的运行时配置也是必须考虑的。
 
-针对以上的这些基本需求，Spring团队整合了一种解决方案：Spring Cloud + Netflix OSS。
+针对以上需求，Spring团队整合了一种解决方案：Spring Cloud + Netflix OSS。
 
 ####服务发现 - Eureka
 [Netflix Eureka 1.X.X](https://github.com/Netflix/eureka/wiki "Eureka Wiki") 使用了一种简单机制实现了节点的自动注册和发现。
 
-Eureka 有两种角色：Eureka Client 和 Eureka Server。通常我们的Spring Cloud 程序（服务）都是作为Eureka Client启动的。 
+Eureka 有两种角色：Eureka Client 和 Eureka Server。通常我们的Spring Cloud 程序都是作为Eureka Client启动的。 
 
-Eureka Client启动时，会根据其配置的 Eureka Server的Url，主动向Eureka Server汇报自身以下信息：
+Eureka Client启动时，会根据配置的Eureka Server的url，主动向Eureka Server汇报自身以下信息：
 
 *  **虚拟主机地址（VIPAddress）**   
 	服务的标识，极其重要，只有根据VIPAddress才能在Eureka Server中查找服务的节点。
@@ -89,7 +89,7 @@ Eureka Server(1.X.X)目前不支持向所有节点广播节点变更，节点的
 
 默认情况下，Eureka Client的实例ID为主机名，这样同一个台机器只能运行一个Client。通过Spring，我们可以让Eureka Client启动时生成随机的Instance Id。
 
-SE团队集目前部署了两个Eureka Server节点（集成环境）：
+SE团队目前部署了两个Eureka Server节点（集成环境）：
 [http://discovery1.se.dooioo.org](http://discovery1.se.dooioo.org) 和[http://discovery2.se.dooioo.org](http://discovery2.se.dooioo.org)，正式环境将顶级域名.org 改为.com，访问即可查看所有已注册的Eureka Client。
 
 #### 服务路由 - Ribbon
@@ -118,9 +118,9 @@ Feign 根据 Service SPI 接口的标注信息，构造符合Http协议的请求
 ```java
 @FeignClient("city")
 //@FeignClient(url="http://localhost:8080")
-public interface CityService{
-    @RequestMapping(value="/v1/city/{id}",method=RequestMethod.GET)
-    City findById(@PathVariable(value="id")int id );
+public interface CitySpi{
+    @RequestMapping(value="/v1/citys/{id}",method=RequestMethod.GET)
+    City findByIdV1(@PathVariable(value="id")int id );
  }
 ```
 
@@ -128,13 +128,13 @@ Feign 有一个接口 `feign.Contract`，用于完成Http请求的构造。Sprin
 
 Service SPI的每个接口都将被Feign代理（JAVA 动态代理），当方法调用时，模板参数将被动态地替换为方法实参。
 
-上文中CityService的`findById`将会被Feign理解为：向 URL = http://city/v1/city/{id}的主机发起一个Http **GET**请求，id为模板参数，运行时替换。
+上文中CityService的`findById`将会被Feign理解为：向 URL = http://city/v1/citys/{id}的主机发起一个Http **GET**请求，id为模板参数，运行时替换。
 
 大家也看到了，URL的主机为”city“，也就是`@FeignClient("city")`中的”city“,”city“被称为**虚拟主机地址**，是服务的标识。一个服务通常是一个Eureka Client，服务会部署多个节点。
 
 此时，发起RPC请求之前需向Eureka Server查询该虚拟主机对应的节点，再由Ribbon选定一个节点。
 
-但我们也可以直接指定请求的url：`@FeignClient(url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/city/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
+但我们也可以直接指定请求的url：`@FeignClient(url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/citys/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
 
 Url的主机地址被动态解析和替换之后，Feign开始发送请求，最后对响应信息反序列化。
 
@@ -186,16 +186,16 @@ Url的主机地址被动态解析和替换之后，Feign开始发送请求，最
 
 如何保障服务的可用性，我们以后再详加讨论。
 
-#### 智能代理 Zuul
+#### API网关：智能代理 Zuul
 对于企业内部的服务间调用来说，以上的 Eureka & Ribbon & Feign & Hystrix 基本就满足应用了。
 
 但如果前端Web页面想Ajax访问内部服务呢？或者我们要暴露一些基础服务给移动端呢？
 
-之前，各个项目线有单独的API模块。部署之后，Nginx配好指向，Web等就可以通过域名访问接口了。
+之前，各个项目线有单独的API模块。部署之后，Nginx配好指向，Web/App就可以通过域名访问接口了。
 
-当改为微服务架构后，节点只能通过Eureka Server来发现了。而且，服务提供提供的就是标准的Rest服务，只需要暴露出去即可，已无需单独的API模块了。
+当改为微服务架构后，节点只能通过Eureka Server来发现了。而且，服务提供方就是标准的REST实现，只需要暴露出去即可，已无需单独的API模块了。
 
-也就是说，我们需要个智能代理，它即可以动态发现新注册的Eureka节点，并把请求分发到合适的节点；又可以做一些权限控制，安全校验等通用的逻辑。
+也就是说，我们需要个智能代理，它既可以动态发现新注册的Eureka节点，并把请求分发到合适的节点；又可以做一些权限控制，安全校验等通用的逻辑。
 
 [Netflix Zuul](https://github.com/Netflix/zuul/wiki) 正是解决这一类问题的不二之选。
 
@@ -210,49 +210,49 @@ Zuul是由一系列过滤器组成的，过滤器内置四种类型：
 
 那Zuul是如何知道 Request Path 关联的虚拟主机地址呢？
 
-我们的Zuul代理项目，采用了一种命名约定，比如对以下的请求url:
+我们的Zuul代理项目(以下统称为**API网关**)，采用了一种命名约定，比如对以下的请求url:
 >GET http://api.route.dooioo.org/loupan/v1/building/3
 
-Zuul默认会将”loupan“作为虚拟主机地址，并从请求路径中移除，此时，转发到后端节点的请求路径变为：
+API网关默认会将”loupan“作为虚拟主机地址，并从请求路径中移除，此时，转发到后端节点的请求路径变为：
 > GET http://node1:port/v1/building/3
 
-也就是说，Zuul所代理的请求的Request Path必须以虚拟主机地址开始。
+也就是说，访问API网关的request path必须以虚拟主机地址开始。
 
 对于以下SPI代码：
 
 ```
 @FeignClient("loupan-server")
-public interface CityService{
-    @RequestMapping(value="/v1/city/{id}",method=RequestMethod.GET)
-    City findById(@PathVariable(value="id")int id );
+public interface CitySpi{
+    @RequestMapping(value="/v1/citys/{id}",method=RequestMethod.GET)
+    City findByIdV1(@PathVariable(value="id")int id );
   }
 ```
-如果由Zuul代理，则请求Zuul的Path必须为：/loupan-server/v1/city/{id}。
+如果通过API网关访问，则request path必须为：/loupan-server/v1/citys/{id}。
 
-我们的Zuul项目会把以'-'连起来的虚拟主机地址转为‘/’分隔的路径，对于：
-/loupan-server/v1/city/{id}，客户端也可以访问：/loupan/server/v1/city/{id}。
+我们的API网关会将以'-'连起来的虚拟主机地址转为‘/’分隔的路径，对于：
+/loupan-server/v1/citys/{id}，客户端也可以访问：/loupan/server/v1/citys/{id}。
 
 **我们称“loupan/server”为虚拟主机地址 “loupan-server”的别名**。
-强烈推荐前端Web以这种别名Path请求Zuul。
+强烈推荐前端Web以别名Path请求API网关。
 
-SE团队Zuul项目的域名为（集成环境）：[http://api.route.dooioo.org](http://api.route.dooioo.org),正式环境，请将.org改为.com。
+SE团队的API网关域名为（集成环境）：[http://api.route.dooioo.org](http://api.route.dooioo.org),正式环境，请将.org改为.com。
 
 
 最后让我们粗略过一下前端Web对示例SPI的请求流程：
 
 1， Web 发起Ajax请求：
-> GET http://api.route.dooioo.org/loupan/server/v1/city/32
+> GET http://api.route.dooioo.org/loupan/server/v1/citys/32
 
-2，请求到达Zuul，首先类型为 “pre” 的Zuul Filter找到别名"/loupan/server"对应的虚拟主机地址："loupan-server"，并标识请求为Eureka，将虚拟主机地址放在 `RequestContext`中。
+2，请求到达API网关，首先类型为 “pre” 的Zuul Filter找到别名"/loupan/server"对应的虚拟主机地址："loupan-server"，并标识请求为Eureka，将虚拟主机地址放在 `RequestContext`中。
 
 3，接下来类型为 "route" 的Zuul Filter发现`RequestContext`有虚拟主机地址，开始使用Ribbon以某种路由规则选定服务的一个节点，移除虚拟主机地址或别名后发送请求。此时后端接受到的请求如下：
-> GET http://selected-node:port/v1/city/32
+> GET http://selected-node:port/v1/citys/32
 
 4，后端节点响应后，类型为 “post”的Zuul Filter将响应写入客户端。
 
 5，以上任何一步发生异常，都会调用类型为 “error” 的Zuul Filter。
 
-附带说明一点：我们的Zuul代理已支持CORS，Web Ajax请求已无需考虑跨域的问题了。
+附带说明一点：我们的API网关已支持CORS，Web Ajax请求已无需考虑跨域的问题了。
 
 #### 配置中心 Spring Cloud Config
 对应用配置的管理，Spring Cloud目前默认的实现是使用Git 来集中存储，相关模块为：[Spring-Cloud-Config](http://cloud.spring.io/spring-cloud-config/)。
@@ -262,7 +262,9 @@ SE团队Zuul项目的域名为（集成环境）：[http://api.route.dooioo.org]
 对开发人员来说，原先放在`/src/main/resources`目录下的配置文件，放在了Git里维护了而已。
 
 具体细节，在此不多说。
-  
+ 
+<br>
+<br>
  
 [^1]: SPI = Service Provider Interface
 [^2]: OSS = Open Source Software

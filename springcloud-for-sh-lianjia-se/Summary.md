@@ -1,4 +1,17 @@
-#Summary
-*[前言](parts/preface.md)
-*[第一章](parts/chapter1/overview.md)
-	*[SpringBoot 简单示例](parts/chatper1/springboot-simple-demo.md)
+bui #Summary
+* [前言](parts/preface.md)
+* [第一章 样例项目 ](parts/chapter1/overview.md)
+	* [微服务架构简介](parts/chapter1/microservice-summary.md)
+	* [微服务架构图](parts/chapter1/microservice-arch-img.md)
+	* [应用程序架构图](parts/chapter1/app-arch-img.md)
+	* [Sample Project: mini楼盘字典](parts/chapter1/sample-project.md)
+	* [mini楼盘字典简介](parts/chapter1/mini-loupan-introduction.md)
+	* [项目结构以及规范](parts/chapter1/project-structure.md)
+	* [编码之前](parts/chapter1/before-coding.md)
+	* [扩展：REST API最佳实践 v1](parts/restapi-v1.html)
+	
+* [第二章 SPI编写](parts/chapter2/overview.md)
+	* [SPI pom.xml](parts/chapter2/spi-pom.md)
+	* [包结构规范](parts/chapter2/spi-package-structure.md)
+	* [Model规范](parts/chapter2/spi-model.md)
+	* [接口以及方法规范](parts/chapter2/spi-interface.md)

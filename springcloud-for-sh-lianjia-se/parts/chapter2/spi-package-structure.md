@@ -11,14 +11,18 @@ SPI由model、业务枚举以及接口组成，但我们必须考虑如何对接
 
 ```
 com.lianjia.sh.loupan.spi
-   	 v1
+     v1
      	  model
+     	  
      	  CitySpiV1.class
      v2
      	  model
+    
      	  CitySpiV2.class
      	  
-     source 
+     source   
+
+     LoupanBizCode.class
      CitySpi.class
 ```
      
@@ -28,9 +32,11 @@ com.lianjia.sh.loupan.spi
 *  com.lianjia.sh.loupan.core.spi
 *  com.lianjia.sh.loupan.statistics.spi
 
-其次，按版本号分成几个sub package，比如，v1，v2，v1或v2由model（业务实体）、具体的接口V1|V2.class（留给server实现） 组成。
+其次，按版本号分成几个sub package，比如，v1，v2。
 
-同时，与v1,v2包并列有source包（业务枚举），以及不带版本号后缀的Spi.class，这是供客户端调用的。
+v1或v2由model（业务实体）、具体版本的SPI接口V1/V2.class（留给server实现） 组成。
+
+同时，与v1,v2包并列有source包（业务枚举）、业务码BizCode.class，以及不带版本号后缀的Spi.class，这是供客户端调用的。
 
 下面示例为loupan-search-spi 模块的包结构：
 
@@ -38,7 +44,7 @@ com.lianjia.sh.loupan.spi
 com.lianjia.sh.loupan.search.spi
    	 v1
      	  model
-     	 	 	City.class           —- v1版本的业务实体
+     	 	    City.class           —- v1版本的业务实体
      	  	 	Resblock.class       —- v1版本的业务实体
      	  	 	OtherEntity.class    —- v1版本的业务实体
      	 
@@ -57,9 +63,10 @@ com.lianjia.sh.loupan.search.spi
      	  ImageSource.class     —- 图片类型
      	  OtherEnumSource.class —- 其他业务枚举
      	  
-    ResblockSpi.class  —- 客户端调用
-    CitySpi.class      —- 客户端调用
-    OtherSpi.class     —  客户端嗲用
+    LoupanBizCode.class    -- 楼盘REST 业务码
+    ResblockSpi.class      —-  客户端调用
+    CitySpi.class      	   —-  客户端调用
+    OtherSpi.class         —-   客户端嗲用
 ```
 
 ### 接口和方法命名规范
@@ -128,6 +135,73 @@ public void doXXX(){
 在实践的过程中，我们可能会进一步调整方案B。
 
 
+#### 业务码
+
+一般REST接口都会声明一系列业务错误码，这便于客户端定位问题。
+
+lorik-spi-view提供了标准业务码: ``` com.dooioo.se.lorik.spi.view.support.BizCode```
+
+BizCode有个静态方法: BizCode.toCodes(BizCode...codes)将业务码转为字符串，可复制字符串到LorikRest(code={“”})里，以生成API文档。
+
+SPI业务码类的命名，推荐为：XXXBizCode，前缀一般为SPI模块名。
+
+下面示例为mini楼盘的业务码：
+
+```
+
+/**
+  * 楼盘标准业务码
+  * @author huisman
+  * @since 1.0.0  
+  * @Copyright (c) 2016, Lianjia Group All Rights Reserved.
+*/
+public interface LoupanBizCode {
+  
+    /**
+     *  城市不存在。
+     */
+    BizCode CITY_NOT_EXISTS=new BizCode(21000, "城市不存在");
+
+    /**
+     * 商圈不存在
+     */
+    BizCode BIZCIRCLE_NOT_EXISTS=new BizCode(22000, "商圈不存在");
+    
+    /**
+     *  楼盘不存在
+     */
+   BizCode REBLOCK_NOT_EXISTS=new BizCode(23000, "楼盘不存在");
+    
+    
+    /**
+     *  行政区域不存在
+     */
+   BizCode DISTRICT_NOT_EXISTS=new BizCode(24000, "区域不存在");
+    
+}
+
+```
+
+业务码可在服务实现时配合com.dooioo.se.lorik.core.web.result.Assert抛出：
+
+```
+  
+  @Service
+  public class CityService{
+  
+      public void updateInvalid(int id){
+          City city=cityDao.findById(id);
+          Assert.found(city !=null,LoupanBizCode.CITY_NOT_EXISTS);
+          //other logic
+      }
+  }
+  
+  
+```
+
+### 业务枚举
+
+业务实现所涉及的业务枚举，推荐声明在SPI包里。
 
 
 

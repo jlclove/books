@@ -40,19 +40,19 @@
 
 如果业务复杂，也可以进一步按功能划分，比如我们可以把楼盘划分为以下三个服务，对应的就有三个server：
   
-服务声明
+服务声明（SPI)
 
 * loupan-search-spi        楼盘搜索服务
 * loupan-core-spi          楼盘核心服务
 * loupan-statistics-spi    楼盘统计服务
 
-服务实现方
+服务实现(Service Provider)
 
 * loupan-search-server     搜索服务实现
 * loupan-core-server       核心业务实现
 * loupan-statistics-server 统计业务实现
 
-客户端
+客户端（Client/Web UI)
 
 * loupan-ui    
 	web界面，交互等，可以调用楼盘自身的服务（loupan-search-spi、loupan-core-spi、loupan-statistics-spi），也可能调用其他项目线的服务，比如oms-core-spi，xingcheng-core-spi。

@@ -1,11 +1,17 @@
 ### SPI 接口规范 
 
-*  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。
-* RequestMapping 只能添加在方法上，不能添加在接口上，RequestMapping的value以版本号为前缀(/version/path)，method必须提供并且只能限定为一种，比如：  
-```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```
- * 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();
- * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。
- * 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。
+*  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。  
+
+* RequestMapping 只能添加在方法上，不能添加在接口上。  
+  RequestMapping的value以版本号为前缀(“/version/path”)，method必须提供并且只能限定为一种，比如：  
+```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```  
+
+ * 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();  
+
+ * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
+
+ * 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。  
+
  * 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```
  
 下面示例为mini楼盘字典楼盘SPI的声明：
@@ -25,16 +31,15 @@ public interface ResblockSpiV1 {
    *  根据城市国标码对楼盘搜索，可根据区域ID、商圈ID分页检索楼盘。
    * 
    * @author huisman
+   * @version v1
    * @param gbCode 城市对应的国标码
    * @param bizcircleId 商圈ID
    * @param districtId 行政区域ID
    * @param pageSize 分页大小
    * @param pageNo 当前页码
    * @return 
-   * @since v1
+   * @since 2016-01-01
    * @summary 根据gbCode分页检索楼盘
-   * @example /v1/resblocks?gbCode=310000
-   * @errorCode
    */
   @LoginNeedless
   @RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET, params = "gbCode")
@@ -47,20 +52,19 @@ public interface ResblockSpiV1 {
  
 ```
 
-#### 方法注释规范
+### 方法注释规范
 
 ```
   /**
   * 方法详细说明
   * @author 作者名或者产品线，邮件等
+  * @version v1 || v2， 版本号，小写。
   * @param 参数名  参数说明
   * @param 参数名  参数说明
   * @param 参数名  参数说明
   * @return 返回结果的说明
-  * @since 方法的版本号，比如v1/v2，小写。
+  * @since 方法实现或上线日期，比如 2016-01-01。
   * @summary 功能概括，一般不超过20字
-  * @example  访问示例，最好可以返回结果
-  * @errorCode 业务抛出的错误码，没有可为空
   */
   
 ```
@@ -71,11 +75,10 @@ public interface ResblockSpiV1 {
 /**
   * 
   * @author huisman
+  * @version v1
   * ${tags}
-  * @since v1
-  * @summary
-  * @example
-  * @errorCode
+  * @since ${date}
+  * @summary 
   */
 
 ```
@@ -88,7 +91,7 @@ loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples
  
  
  
-还有一点需要注意：供客户端调用的SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的模块名，代码示例如下：
+还有一点需要注意：供客户端调用的SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的spring.application.name，一般是实现方模块名，代码示例如下：
 
 ```
 @FeignClient("loupan-core-server")

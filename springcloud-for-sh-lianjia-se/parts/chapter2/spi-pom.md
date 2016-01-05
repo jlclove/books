@@ -6,7 +6,7 @@ SPI模块只需引入三个jar：
 *  spring-cloud-netflix-core   
 	仅为了代码编译通过，scope为provided
 *  lorik-spi-view   
- 我们内部对spi层的支持，包括登录校验、分页、Model的视图支持、支持Spring MVC 标注（@RequestParam，@Pathvariable,@RequestHeader)的继承等，必须显式依赖特定版本号（目前版本号为2.1.0）。
+ 我们内部对spi层的支持，包括登录校验、分页、Model的视图支持、支持Spring MVC 标注（@RequestParam，@Pathvariable,@RequestHeader)的继承等，必须显式依赖特定版本号（目前版本号为2.1.1）。
 
 pom.xml如下：
 
