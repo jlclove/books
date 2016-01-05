@@ -1,5 +1,5 @@
 ###读者受众
-上海链家SE团队有实际Spring项目开发经验的工程师<br>
+上海链家有实际Spring项目开发经验的工程师<br>
 下面我们简要介绍下[Spring Boot](http://projects.spring.io/spring-boot/ "Spring Boot Project") 和 [Spring Cloud](http://http://projects.spring.io/spring-cloud/ "Spring Cloud Project")。
 ###Spring Boot
 Spring Boot 使得创建独立的、基于Spring Framework的生产级应用更加容易。在此之前，基于Spring的Web应用（大多数Spring WebMVC应用）必须依赖一个外部的Servlet容器、部署之后才能运行，如下：
