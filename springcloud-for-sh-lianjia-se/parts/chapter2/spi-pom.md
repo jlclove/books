@@ -37,7 +37,7 @@ pom.xml如下：
 		<dependency>
          	<groupId>com.dooioo.se.lorik</groupId>
 		    <artifactId>lorik-spi-view</artifactId>
-		    <version>2.1.0</version>
+		    <version>2.1.1</version>
         </dependency>
    </dependencies>
 </project>
