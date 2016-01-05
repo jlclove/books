@@ -69,7 +69,7 @@ com.lianjia.sh.loupan.search.spi
     OtherSpi.class         —-   客户端嗲用
 ```
 
-### 接口和方法命名规范
+### 接口和方法
 SPI 接口分两种，一种是给客户端调用的，和v1/v2等包平级，这些接口的后缀为”Spi”，是没有版本号的，比如CitySpi.class。另一种是server需要实现的、放在v1/v2包里的SPI接口，这些接口的后缀为：“Spi”+版本，比如CitySpiV1.class、CitySpiV2.class。
 
 那么这两类接口有什么关系呢？下面代码演示了他们之间的关联：
@@ -141,7 +141,7 @@ public void doXXX(){
 
 lorik-spi-view提供了标准业务码: ``` com.dooioo.se.lorik.spi.view.support.BizCode```
 
-BizCode有个静态方法: BizCode.toCodes(BizCode...codes)将业务码转为字符串，可复制字符串到LorikRest(code={“”})里，以生成API文档。
+BizCode有个静态方法: BizCode.toCodes(BizCode...codes)将业务码转为字符串，可复制字符串到LorikRest(codes={“”})里，以生成API文档。
 
 SPI业务码类的命名，推荐为：XXXBizCode，前缀一般为SPI模块名。
 

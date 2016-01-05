@@ -6,7 +6,7 @@ bui #Summary
 	* [应用程序架构图](parts/chapter1/app-arch-img.md)
 	* [Sample Project: mini楼盘字典](parts/chapter1/sample-project.md)
 	* [mini楼盘字典简介](parts/chapter1/mini-loupan-introduction.md)
-	* [项目结构以及规范](parts/chapter1/project-structure.md)
+	* [项目结构及规范](parts/chapter1/project-structure.md)
 	* [编码之前](parts/chapter1/before-coding.md)
 	* [扩展：REST API最佳实践 v1](parts/restapi-v1.html)
 	

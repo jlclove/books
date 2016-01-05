@@ -122,7 +122,7 @@ public interface DistrictSpiV1{
 @param 我们用于显示方法参数的说明。<br>
 Spring MVC的标注将会被正确解释为符合Http 语义的说明，比如路径参数，请求参数。<br>
 @version REST接口版本号 。<br>
-@since 开发日期，比如：2016-01-01，追加在接口功能里。<br>
+@since 接口开发或发布日期，比如：2016-01-01，追加在接口功能里。<br>
 
 方法doc的描述（First Sentence）则显示为接口说明。
 各个doc tags 的顺序建议和示例保持一致。

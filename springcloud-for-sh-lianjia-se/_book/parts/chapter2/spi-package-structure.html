@@ -53,7 +53,7 @@
         data-chapter-title="包结构规范"
         data-filepath="parts/chapter2/spi-package-structure.md"
         data-basepath="../.."
-        data-revision="Tue Jan 05 2016 19:00:10 GMT+0800 (CST)"
+        data-revision="Tue Jan 05 2016 19:44:39 GMT+0800 (CST)"
         data-innerlanguage="">
     
 
@@ -197,7 +197,7 @@
                         
                             <b>2.6.</b>
                         
-                        项目结构以及规范
+                        项目结构及规范
                     </a>
             
             
@@ -408,7 +408,7 @@
     ResblockSpi.class      &#x2014;-  &#x5BA2;&#x6237;&#x7AEF;&#x8C03;&#x7528;
     CitySpi.class             &#x2014;-  &#x5BA2;&#x6237;&#x7AEF;&#x8C03;&#x7528;
     OtherSpi.class         &#x2014;-   &#x5BA2;&#x6237;&#x7AEF;&#x55F2;&#x7528;
-</code></pre><h3 id="&#x63A5;&#x53E3;&#x548C;&#x65B9;&#x6CD5;&#x547D;&#x540D;&#x89C4;&#x8303;">&#x63A5;&#x53E3;&#x548C;&#x65B9;&#x6CD5;&#x547D;&#x540D;&#x89C4;&#x8303;</h3>
+</code></pre><h3 id="&#x63A5;&#x53E3;&#x548C;&#x65B9;&#x6CD5;">&#x63A5;&#x53E3;&#x548C;&#x65B9;&#x6CD5;</h3>
 <p>SPI &#x63A5;&#x53E3;&#x5206;&#x4E24;&#x79CD;&#xFF0C;&#x4E00;&#x79CD;&#x662F;&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#x8C03;&#x7528;&#x7684;&#xFF0C;&#x548C;v1/v2&#x7B49;&#x5305;&#x5E73;&#x7EA7;&#xFF0C;&#x8FD9;&#x4E9B;&#x63A5;&#x53E3;&#x7684;&#x540E;&#x7F00;&#x4E3A;&#x201D;Spi&#x201D;&#xFF0C;&#x662F;&#x6CA1;&#x6709;&#x7248;&#x672C;&#x53F7;&#x7684;&#xFF0C;&#x6BD4;&#x5982;CitySpi.class&#x3002;&#x53E6;&#x4E00;&#x79CD;&#x662F;server&#x9700;&#x8981;&#x5B9E;&#x73B0;&#x7684;&#x3001;&#x653E;&#x5728;v1/v2&#x5305;&#x91CC;&#x7684;SPI&#x63A5;&#x53E3;&#xFF0C;&#x8FD9;&#x4E9B;&#x63A5;&#x53E3;&#x7684;&#x540E;&#x7F00;&#x4E3A;&#xFF1A;&#x201C;Spi&#x201D;+&#x7248;&#x672C;&#xFF0C;&#x6BD4;&#x5982;CitySpiV1.class&#x3001;CitySpiV2.class&#x3002;</p>
 <p>&#x90A3;&#x4E48;&#x8FD9;&#x4E24;&#x7C7B;&#x63A5;&#x53E3;&#x6709;&#x4EC0;&#x4E48;&#x5173;&#x7CFB;&#x5462;&#xFF1F;&#x4E0B;&#x9762;&#x4EE3;&#x7801;&#x6F14;&#x793A;&#x4E86;&#x4ED6;&#x4EEC;&#x4E4B;&#x95F4;&#x7684;&#x5173;&#x8054;&#xFF1A;</p>
 <pre><code class="lang-java">   <span class="hljs-keyword">package</span> com.lianjia.sh.loupan.search.spi.v1;
@@ -459,7 +459,7 @@
 <h4 id="&#x4E1A;&#x52A1;&#x7801;">&#x4E1A;&#x52A1;&#x7801;</h4>
 <p>&#x4E00;&#x822C;REST&#x63A5;&#x53E3;&#x90FD;&#x4F1A;&#x58F0;&#x660E;&#x4E00;&#x7CFB;&#x5217;&#x4E1A;&#x52A1;&#x9519;&#x8BEF;&#x7801;&#xFF0C;&#x8FD9;&#x4FBF;&#x4E8E;&#x5BA2;&#x6237;&#x7AEF;&#x5B9A;&#x4F4D;&#x95EE;&#x9898;&#x3002;</p>
 <p>lorik-spi-view&#x63D0;&#x4F9B;&#x4E86;&#x6807;&#x51C6;&#x4E1A;&#x52A1;&#x7801;: <code>com.dooioo.se.lorik.spi.view.support.BizCode</code></p>
-<p>BizCode&#x6709;&#x4E2A;&#x9759;&#x6001;&#x65B9;&#x6CD5;: BizCode.toCodes(BizCode...codes)&#x5C06;&#x4E1A;&#x52A1;&#x7801;&#x8F6C;&#x4E3A;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x53EF;&#x590D;&#x5236;&#x5B57;&#x7B26;&#x4E32;&#x5230;LorikRest(code={&#x201C;&#x201D;})&#x91CC;&#xFF0C;&#x4EE5;&#x751F;&#x6210;API&#x6587;&#x6863;&#x3002;</p>
+<p>BizCode&#x6709;&#x4E2A;&#x9759;&#x6001;&#x65B9;&#x6CD5;: BizCode.toCodes(BizCode...codes)&#x5C06;&#x4E1A;&#x52A1;&#x7801;&#x8F6C;&#x4E3A;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x53EF;&#x590D;&#x5236;&#x5B57;&#x7B26;&#x4E32;&#x5230;LorikRest(codes={&#x201C;&#x201D;})&#x91CC;&#xFF0C;&#x4EE5;&#x751F;&#x6210;API&#x6587;&#x6863;&#x3002;</p>
 <p>SPI&#x4E1A;&#x52A1;&#x7801;&#x7C7B;&#x7684;&#x547D;&#x540D;&#xFF0C;&#x63A8;&#x8350;&#x4E3A;&#xFF1A;XXXBizCode&#xFF0C;&#x524D;&#x7F00;&#x4E00;&#x822C;&#x4E3A;SPI&#x6A21;&#x5757;&#x540D;&#x3002;</p>
 <p>&#x4E0B;&#x9762;&#x793A;&#x4F8B;&#x4E3A;mini&#x697C;&#x76D8;&#x7684;&#x4E1A;&#x52A1;&#x7801;&#xFF1A;</p>
 <pre><code>
