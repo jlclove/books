@@ -1,4 +1,4 @@
-本章我们将简要介绍下微服务架构的一些概念，包括：
+本章我们将简要介绍微服务架构的一些概念，包括：
 
 *  **[微服务架构简介](./microservice-summary.html)**
 *   **[微服务架构图](./microservice-arch-img.html)**
