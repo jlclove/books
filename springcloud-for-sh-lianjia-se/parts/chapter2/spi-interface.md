@@ -5,14 +5,15 @@
 * RequestMapping 只能添加在方法上，不能添加在接口上。  
   RequestMapping的value以版本号为前缀(“/version/path”)，method必须提供并且只能限定为一种，比如：  
 ```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```  
+  
+* 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();  
 
- * 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();  
+* 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
 
- * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
 
- * 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。  
+* 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。  
 
- * 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```
+* 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```
  
 下面示例为mini楼盘字典楼盘SPI的声明：
 
