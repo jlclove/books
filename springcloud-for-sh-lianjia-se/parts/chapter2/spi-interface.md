@@ -88,7 +88,7 @@ public interface ResblockSpiV1 {
 
 ### 代码示例
 loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples/tree/master/springcloud-for-sh-lianjia-se/loupan-spi/src/main/java/com/lianjia/sh/samples/loupan/spi)，代码结构如下图所示：
- ![loupan-spi模块](https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se/parts/chapter2/images/spi-code.png)
+ ![loupan-spi模块]({{book.imagePath}}/parts/chapter2/images/spi-code.png)
  
  
  

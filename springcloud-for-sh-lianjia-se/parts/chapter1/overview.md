@@ -8,7 +8,7 @@
 
 阅读完以上章节之后，我们将实现一个样例工程： mini楼盘字典，包括：
 
-*  [**Sample Project： mini楼盘字典**](./sample-project.html)
+*  [**mini楼盘字典**](./sample-project.html)
 *  **[mini楼盘字典简介](./mini-loupan-introduction.html)**
 *  **[项目结构及规范](./project-structure.html)**
 *  [**编码之前**](./before-coding.html)

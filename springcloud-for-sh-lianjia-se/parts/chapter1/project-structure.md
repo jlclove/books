@@ -1,6 +1,6 @@
 ### 项目结构
 切换成微服务之后，和我们之前的开发有何不同呢？
-![代码架构对照图](https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se/parts/chapter1/images/code-arch-comp.png)
+![代码架构对照图]({{book.imagePath}}/parts/chapter1/images/code-arch-comp.png)
 
 直观上最大的不同是项目由原来的单个应用划分成了三个项目（模块）：
 
@@ -24,7 +24,7 @@
 
 我们的mini楼盘字典，只演示了一个服务，该项目使用Maven多模块的方式组织代码，如下所示：
 
-![楼盘字典模块图](https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se/parts/chapter1/images/project-modules.png)
+![楼盘字典模块图]({{imagePath}}/parts/chapter1/images/project-modules.png)
 
 ### 模块命名约定
 我们将服务提供方称为server，客户端如果是web项目，则称为ui，否则称为client，服务声明则称为spi。
@@ -58,73 +58,6 @@
 	web界面，交互等，可以调用楼盘自身的服务（loupan-search-spi、loupan-core-spi、loupan-statistics-spi），也可能调用其他项目线的服务，比如oms-core-spi，xingcheng-core-spi。
 * loupan-management-ui 系统运行一段时间后，新加了楼盘的运营、管理等web功能。
 
-
-### Parent pom.xml
-开发Maven多模块项目时，可以把各模块的公共配置放在Parent项目的pom.xml里。
-
-Spring Cloud为了简化项目版本依赖的管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为spring-cloud-starter-parent，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
-
-**我们采用的Spring Cloud 版本为：Brixton.M4**
-
-```
-     <parent>
-		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Brixton.M4</version>
-	</parent>
-```
-
-最终，Maven Parent项目的pom.xml如下：
-
-```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-  <!--我们项目的父级为  Spring Cloud ， 版本为：Brixton.M4  -->
-  <parent>
-		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Brixton.M4</version>
-	</parent>
-	
-  <groupId>com.lianjia.sh.samples.loupan</groupId>
-  <artifactId>loupan</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>loupan</name>
-  <description>Spring Cloud Sample for SE@sh.lianjia.com</description>
-  
-  <properties>
-		<!--覆盖Spring提供的1.6，指定了项目编译后的class版本 -->
-		<java.version>1.8</java.version>
- </properties>
- 
-   <!-- 为防止某些jar包无法下载，我们指定仓库地址 -->
-  <repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-  
-  <modules>
-  	<module>loupan-server</module>
-  	<module>loupan-spi</module>
-  	<module>loupan-ui</module>
-  </modules>
-</project>
-
-```
-
-
-### 后续章节
-parent pom.xml配置好之后，终于到实践环节了。
-
-后续章节，先介绍如何编写SPI模块（第二章），接着介绍如何实现SPI（第三章），最后介绍如何调用SPI以开发一个web app（第四章）。
 
 
 

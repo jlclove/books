@@ -1,0 +1,9 @@
+{
+	"title": "微服务实战（上海链家）",
+	"variables": {
+	    "imagePath": "https://raw.githubusercontent.com/bookdao/books/master/springcloud-for-sh-lianjia-se",
+		"lorikSpiViewVersion": "2.1.2",
+		"lorikCoreVersion": "1.1.0",
+		"lorikApidocletVersion": "1.0.0"
+	}
+}
