@@ -11,6 +11,7 @@ bui #Summary
 	* [编码之前](parts/chapter1/before-coding.md)
 	* [扩展：REST API最佳实践](parts/restful-api-v1.4.md)
 	* [扩展：REST API版本控制](parts/restful-api-versioncontrol.md)
+	* [扩展：Ajax 跨域](parts/cors.md)
 * [SPI编写](parts/chapter2/overview.md)
 	* [pom.xml](parts/chapter2/spi-pom.md)
 	* [包结构规范](parts/chapter2/spi-package-structure.md)
