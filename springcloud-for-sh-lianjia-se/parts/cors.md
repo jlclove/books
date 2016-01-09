@@ -30,7 +30,7 @@ JSONP 是 **JSON** with **P**adding的简写，JSONP被Web开发者用来克服�
    "name" : "上海市"
  }
 ```
-如果将此URL赋值给HTML标签 &lt;script&gt; 的src：
+如果将此URL赋给HTML标签 &lt;script&gt; 的src：
 ```javascript
 <script type="application/javascript"
         src="http://api.route.dooioo.org/loupan/server/v1/citys/1">
@@ -90,6 +90,7 @@ parseResponse({
 
 综上，JSONP必须满足以下条件：
 * 必须依赖HTML标签 &lt;script&gt;的src属性来发起请求。
+* JSONP响应数据本质上是js脚本。
 * 客户端和服务端必须相互配合。  
 客户端预定义回调函数，将方法名通过约定查询参数callback或jsop传给服务端，服务端使用方法名包装原始响应数据。
 
@@ -137,43 +138,59 @@ JSONP优点： 兼容所有版本的浏览器，只要能正确解释执行JavaS
 
 ##### CORS 请求流程
 
-1， 从网站stackoverflow.com 向我们的API网关api.route.dooioo.org 发起Ajax请求：  
- > $.get("http://api.route.dooioo.org/loupan/server/v1/citys") 
+1， 从网站stackoverflow.com 向我们的API网关api.route.dooioo.org 发起Ajax请求： 
+```javascript
+$.get("http://api.route.dooioo.org/loupan/server/v1/citys") 
+``` 
  
-2， 浏览器发现当前主机域名为：stackoverflow.com，但请求的主机域名为：api.route.dooioo.org，断定请求为跨域请求，主动添加Request Header-Origin:  
-> GET http://api.route.dooioo.org/loupan/server/v1/citys  
-> Origin: stackoverflow.com
-
+2， 浏览器发现当前主机域名为：stackoverflow.com，但请求的主机域名为：api.route.dooioo.org，断定请求为跨域请求，主动添加Request Header-Origin:
+```javascript
+ Request URL: http://api.route.dooioo.org/loupan/server/v1/citys
+ Request Method: GET
+```  
+```http  
+ Origin: stackoverflow.com
+```
 3， 浏览器根据CORS规范，判断请求是否为**简单跨域请求** [^1]（Simple cross-origin Request)。  
 
 4， 如果不是简单跨域请求，浏览器将发起一个预校验（Preflight）的OPTION 请求。  
-**Preflighted请求** [^2]会发送 Access-Control-Request-Method(客户端发起Http请求的Method) 、Access-Control-Request-Headers（客户端自定义的Request Header）,服务端根据Header判断跨域请求是否安全：  
-> OPTION http://api.route.dooioo.org/loupan/server/v1/citys  
-> Origin: stackoverflow.com  
-> Access-Control-Request-Method: GET  
-> Access-Control-Request-Headers: X-Api-Version  
- 
+**Preflighted请求** [^2]会发送 Access-Control-Request-Method(客户端发起Http请求的Method) 、Access-Control-Request-Headers（客户端自定义的Request Header）,服务端根据Header判断跨域请求是否安全：
+ ```javascript
+ Request URL: http://api.route.dooioo.org/loupan/server/v1/citys
+ Request Method: OPTION
+ ```
+ ```http  
+ Origin: stackoverflow.com 
+ Access-Control-Request-Method: GET
+ Access-Control-Request-Headers: X-Api-Version  
+ ```
  服务端校验不通过，可直接响应401/403 Http状态码，跨域请求被拒绝。
  
- 校验通过之后，可响应以下Response Header：  
-> Access-Control-Allow-Credentials: false  
-> Access-Control-Allow-Origin: *  
-> Access-Control-Allow-Methods: GET,POST,OPTION 
-> Access-Control-Allow-Headers: X-Api-Version  
-> Access-Control-Max-Age: 3600    
+ 校验通过之后，可响应以下Response Header： 
+ ```http 
+ Access-Control-Allow-Credentials: false  
+ Access-Control-Allow-Origin: *  
+ Access-Control-Allow-Methods: GET,POST,OPTION 
+ Access-Control-Allow-Headers: X-Api-Version  
+ Access-Control-Max-Age: 3600 
+```   
 
 非简单跨域请求每次都会发起Preflight请求,Access-Control-Max-Age响应头指示客户端可以将校验请求缓存多久，单位为秒。
 
 5，浏览器发起实际Ajax请求，服务端必须添加响应头：  
-> Access-Control-Allow-Origin: stackoverflow.com
+```http
+Access-Control-Allow-Origin: stackoverflow.com
+```
+Access-Control-Allow-Origin值可为*（允许所有网站访问）或明确指定的域名。
   
-Access-Control-Allow-Origin值可为*（允许所有网站访问）或明确限定的域名。
-  
-如果服务端允许客户端发送Http Authentication 数据、客户端SSL、以及Cookies数据，则可以响应：  
-> Access-Control-Allow-Credentials: true  
-  
+如果服务端允许客户端发送Http Authentication 数据、客户端SSL、以及Cookies数据，则可以响应：
+```http  
+Access-Control-Allow-Credentials: true  
+``` 
 默认情况下，Ajax请求仅能读取标准HTTP 响应头，服务端也可以限定暴露给客户端访问的Response Header：
-> Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token  
+```http
+Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token  
+```
 
 6，浏览器判断服务端响应的Access-Control-Allow-Origin的值是否包含当前Host：stackoverflow.com，包含则意味着可以跨域访问资源。另外，* 意味着所有主机都可以访问此域名。如果此响应头不存在或响应头不包括当前主机，浏览器直接丢弃数据，拒绝跨域请求。 
 
@@ -195,7 +212,7 @@ Access-Control-Allow-Origin值可为*（允许所有网站访问）或明确限�
 ##### CORS的优点和不足
  CORS的优点：
   1. 支持所有Http Method( GET/POST/HEAD/PUT/DELETE/PATCH/OPTION)。
-  2. 仅配置个过滤器即可，业务接口无需关心跨域问题、不用改变响应数据。
+  2. 仅配置CORS过滤器即可，业务接口无需关心跨域问题、不用改变响应数据。
 
 
 CORS的不足：
