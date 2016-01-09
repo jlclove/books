@@ -120,7 +120,7 @@ JSONP不足之处：
 JSONP优点： 兼容所有版本的浏览器，只要能正确解释执行JavaScript。
 
 ### 跨域资源共享（CORS)
- CORS是Cross-origin resource sharing的简称。CORS规范定义了一系列 Request Header和Response Header，浏览器和服务端程序根据Request/Response Header做出不同的行为。
+ CORS是**C**ross-**O**rigin **R**esource **S**haring的简称。CORS规范定义了一系列 Request Header和Response Header，浏览器和服务端程序根据Request/Response Header做出不同的行为。
  
 ##### CORS Request Header
 * Origin
@@ -144,41 +144,43 @@ JSONP优点： 兼容所有版本的浏览器，只要能正确解释执行JavaS
 > GET http://api.route.dooioo.org/loupan/server/v1/citys  
 > Origin: stackoverflow.com
 
-3， 浏览器根据CORS规范，判断请求是否为**简单跨域请求**（Simple cross-origin Request)？下文会具体解释CORS名词。  
+3， 浏览器根据CORS规范，判断请求是否为**简单跨域请求** [^1]（Simple cross-origin Request)。  
 
 4， 如果不是简单跨域请求，浏览器将发起一个预校验（Preflight）的OPTION 请求。  
-Preflight请求会发送 Access-Control-Request-Method(客户端发起Http请求的Method) 、Access-Control-Request-Headers（客户端发起请求时的Request Header）,服务端依据Header检查是否支持该请求。  
+**Preflighted请求** [^2]会发送 Access-Control-Request-Method(客户端发起Http请求的Method) 、Access-Control-Request-Headers（客户端自定义的Request Header）,服务端根据Header判断跨域请求是否安全：  
 > OPTION http://api.route.dooioo.org/loupan/server/v1/citys  
 > Origin: stackoverflow.com  
 > Access-Control-Request-Method: GET  
-> Access-Control-Request-Headers: Content-Type,Accept,Accept-Language  
+> Access-Control-Request-Headers: X-Api-Version  
  
- 服务端校验不通过，可响应401/403 Http状态码，跨域请求被拒绝。
+ 服务端校验不通过，可直接响应401/403 Http状态码，跨域请求被拒绝。
  
  校验通过之后，可响应以下Response Header：  
-> Access-Control-Allow-Credentials: true/false  
-> Access-Control-Allow-Origin: */stackoverflow.com  
-> Access-Control-Allow-Methods: GET  
-> Access-Control-Allow-Headers: Content-Type,Accept,Accept-Language  
+> Access-Control-Allow-Credentials: false  
+> Access-Control-Allow-Origin: *  
+> Access-Control-Allow-Methods: GET,POST,OPTION 
+> Access-Control-Allow-Headers: X-Api-Version  
 > Access-Control-Max-Age: 3600    
 
 非简单跨域请求每次都会发起Preflight请求,Access-Control-Max-Age响应头指示客户端可以将校验请求缓存多久，单位为秒。
 
 5，浏览器发起实际Ajax请求，服务端必须添加响应头：  
-> Access-Control-Allow-Origin: stackoverflow.com,www.dooioo.com
+> Access-Control-Allow-Origin: stackoverflow.com
   
-Access-Control-Allow-Origin值为*的话，则允许所有网站访问。多个值可以使用逗号隔开。
+Access-Control-Allow-Origin值可为*（允许所有网站访问）或明确限定的域名。
   
-如果服务端允许客户端发送Http Authentication 数据、SSL、以及Cookies，则可以响应：  
+如果服务端允许客户端发送Http Authentication 数据、客户端SSL、以及Cookies数据，则可以响应：  
 > Access-Control-Allow-Credentials: true  
   
 默认情况下，Ajax请求仅能读取标准HTTP 响应头，服务端也可以限定暴露给客户端访问的Response Header：
-> Access-Control-Expose-Headers: Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma  
+> Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token  
 
 6，浏览器判断服务端响应的Access-Control-Allow-Origin的值是否包含当前Host：stackoverflow.com，包含则意味着可以跨域访问资源。另外，* 意味着所有主机都可以访问此域名。如果此响应头不存在或响应头不包括当前主机，浏览器直接丢弃数据，拒绝跨域请求。 
 
+![CORS简单跨域请求]({{book.imagePath}}/parts/chapter1/images/cors-simple-request.png)
 
-##### CORS 要求
+
+##### CORS 应用要求
  可以看到，使用CORS实现跨域时，浏览器必须支持CORS规范，服务端也必须支持CORS规范。
  
  目前以下版本的浏览器都支持CORS规范：
@@ -203,11 +205,42 @@ CORS的不足：
    
    ![国内浏览器版本占比]({{book.imagePath}}/parts/chapter1/images/browsers.png)
     
-   可以看到IE6/7已属于极小众市场，可以忽略，目前主流版本IE8/9/10。
+   可以看到IE6/7已属于小众市场，可以忽略，目前主流版本IE8/9/10。
    
-   因此使用CORS实现跨域请求是首选。
+   因此使用CORS解决跨域请求是首选。
    
+   ##### CORS 术语（Terminology）
+ 
+   * 简单方法 （simple method)  
+		HTTP METHOD: GET/HEAD/POST ，大小写敏感。
+   * 简单头部 （Simple Header)  
+ 	header为Accept,Accept-Language,Content-Language，以及Content-Type MIME类型为 application/x-www-form-urlencoded, multipart/form-data, or text/plain的Header，大小写不敏感。
+   * 简单跨域请求（Simple Cross-origin Request)  
+     请求方法为**简单方法**并且请求头为**简单头部**的请求。也就是说简单跨域请求至少满足两个条件： Http Method 必须为GET、HEAD、POST之一，可被手动设置的Request Header为Accept、Accept-Language/Content-Language以及Content-Type（Content-Type可选值为application/x-www-form-urlencoded、 multipart/form-data、text/plain)。
+
+   * 简单响应头(Simple Response Header)  
+		response header为Cache-Contro,Content-Language,Content-Type,Expires,Last-Modified,Pragma，大小写不敏感。
+
+   * 预校验请求（Preflighted Request)  
+    所有非简单请求，必须先发送HTTP METHOD 为 OPTION的Preflighted 请求，以决定是否可以安全的发送实际请求。  
+符合以下任一条件都会发送预校验请求： Http METHOD不是GET、HEAD 或者POST，比如PUT/DELETE/PUT/PATCH；如果使用POST发送请求，但Cotent-Type不是application/x-www-form-urlencoded、multipart/form-data 或text/plain，比如application/xml、text/xml；设置自定义请求头，比如 X-Api-Version。  
+
+    ```
+     function callOtherDomain(){
+     if(invocation)
+     {
+      invocation.open('POST', url, true);
+      invocation.setRequestHeader('X-Api-Version', '1');
+      invocation.setRequestHeader('Content-Type', 'application/xml');
+      invocation.onreadystatechange = handler;
+      invocation.send(body); 
+    }
+}
+  ```
    ##### CORS请求流程图（节选自Wiki）
-   ![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.svg)
-
-
+   ![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.png)
+   
+ <br>
+ [^1]: 简单跨域请求，指请求方法为**简单方法**并且请求头为**简单头部**的请求。也就是说简单跨域请求至少满足两个条件： Http Method 必须为GET、HEAD、POST之一，可被手动设置的Request Header为Accept、Accept-Language/Content-Language以及Content-Type（Content-Type可选值为application/x-www-form-urlencoded、 multipart/form-data、text/plain)。
+<br>
+[^2]: 预校验请求（Preflighted Request)指所有非简单请求，符合以下任一条件都会发送预校验请求： Http METHOD不是GET、HEAD 或者POST，比如PUT/DELETE/PUT/PATCH；如果使用POST发送请求，但Cotent-Type不是application/x-www-form-urlencoded、multipart/form-data 或text/plain，比如application/xml、text/xml；设置自定义请求头，比如 X-Api-Version。
