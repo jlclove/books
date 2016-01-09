@@ -203,8 +203,11 @@ CORS的不足：
    
    ![国内浏览器版本占比]({{book.imagePath}}/parts/chapter1/images/browsers.png)
     
-   可以看到IE6/7已属于极小众市场，目前主流版本IE8/9/10。
+   可以看到IE6/7已属于极小众市场，可以忽略，目前主流版本IE8/9/10。
    
    因此使用CORS实现跨域请求是首选。
+   
+   ##### CORS请求流程图（节选自Wiki）
+   ![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.svg)
 
 
