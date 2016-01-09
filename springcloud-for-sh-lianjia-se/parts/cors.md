@@ -188,15 +188,23 @@ Access-Control-Allow-Origin值为*的话，则允许所有网站访问。多个�
 
 服务端（资源方）通常使用`Filter`拦截请求，在过滤器里按照CORS规范解析并响应请求。Tomcat 内置了```org.apache.catalina.filters.CorsFilter```，另外，lorik-core也提供了实现：[lorik-core: CORSFilter](https://github.com/huisman6/lorik/blob/master/lorik-core/src/main/java/com/dooioo/se/lorik/core/web/filter/CORSFilter.java)。lorik的CORSFilter参考自Tomcat的实现，但提供了更好的兼容性（兼容IE8/9，Tomcat太严格，不支持）。
 
-如果你想实现自己的CORSFilter，请参考 [W3c CORS 规范](http://www.w3.org/TR/cors/)。另外，请不要在拦截器里解析CORS请求，因为OPTION请求Tomcat会自动响应。
+如果你想实现自己的CORSFilter，请参考 [W3c CORS 规范](http://www.w3.org/TR/cors/)。另外，请不要在拦截器里解析CORS请求，因为Tomcat会自动响应OPTION请求。
 
 ##### CORS的优点和不足
  CORS的优点：
   1. 支持所有Http Method( GET/POST/HEAD/PUT/DELETE/PATCH/OPTION)。
   2. 仅配置个过滤器即可，业务接口无需关心跨域问题、不用改变响应数据。
 
- CORS的不足：
-   低版本的浏览器不支持，比如IE6/IE7，但现在主流留
- 
+
+CORS的不足：
+   低版本的浏览器不支持，比如IE6/IE7。  
+
+   下图是2014年1月1日-2016年1月1日国内用户的浏览器版本统计：
+   
+   ![国内浏览器版本占比]({{book.imagePath}}/parts/chapter1/images/browsers.png)
+    
+   可以看到IE6/7已属于极小众市场，目前主流版本IE8/9/10。
+   
+   因此使用CORS实现跨域请求是首选。
 
 
