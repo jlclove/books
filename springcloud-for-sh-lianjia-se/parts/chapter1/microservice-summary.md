@@ -266,9 +266,9 @@ SE团队的API网关域名为（集成环境）：[http://api.route.dooioo.org](
 <br>
 <br>
  
-[^1]: SPI = Service Provider Interface
-[^2]: OSS = Open Source Software
-[^3]: RPC = Remote Procedure Call
+[^1]: SPI = Service Provider Interface，服务提供方接口
+[^2]: OSS = Open Source Software 开源软件
+[^3]: RPC = Remote Procedure Call 远程过程调用
 [^4]: “雪崩效应”是指信息在沿供应链传递中其波动会被依次放大的现象，这种现象导致信息在传递过程之中有如滚雪球一般越滚越大。
 [^5]: 流量整形(traffic shaping)典型作用是限制流出某一网络的某一连接的流量与突发，使这类报文以比较均匀的速度向外发送。
 [^6]: 断路器（Circuit Breaker）是指能够关合、承载和开断正常回路条件下的电流并能关合、在规定的时间内承载和开断异常回路条件下的电流的开关装置。
