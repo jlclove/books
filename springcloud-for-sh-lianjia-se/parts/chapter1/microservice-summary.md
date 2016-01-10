@@ -33,7 +33,7 @@
 
 微服务是如何避免这种尴尬的服务维护呢？
 
-对客户端来说，如果我要萝卜，服务方给它萝卜即可，至于萝卜是从何而来，客户端是不关心的。反观我们采用“**硬引用**”的方式暴露服务时，将实现方式直接驻留在了客户端，从而变相地和客户端耦合在了一起。
+对客户端来说，如果我要萝卜，服务提供方给它萝卜即可，至于萝卜是从何而来，客户端是不关心的。反观我们采用“**硬引用**”的方式暴露服务时，将实现方式直接驻留在了客户端，从而变相地和客户端耦合在了一起。
 
 基于微服务的架构开发时，项目线（Service Provider）只向客户端(Client)提供 **Service SPI**。SPI是一系列声明（接口和Model），没有任何实现细节，驻留在客户端的只是一个空壳，真身仍在项目线。
 
@@ -55,7 +55,7 @@
 	 2. 服务路由 - 从众多节点以某种规则选择一个节点。
 	 3. RPC请求 - 向选定的节点发起远程网络调用(RPC)，解析返回数据。
  
-由于网络调用的复杂性，我们还必须处理RPC[^3]请求异常时可能导致的雪崩效应[^4]，所以流量整形[^5]和监控是必要的。
+由于网络调用的复杂性，我们还必须处理RPC[^3]请求异常时可能导致的雪崩效应[^4]，所以网络流量整形[^5]和监控是必要的。
 
 另外，由于部署多个节点，如何管理应用程序的运行时配置也是必须考虑的。
 
@@ -81,7 +81,7 @@ Eureka Client启动时，会根据配置的Eureka Server的url，主动向Eureka
 *  health url   
 程序健康状况的监控url
 *  metadata 和其他   
-其他的元数据信息，可被其他Client获取。
+自定义的元数据信息，可被其他Client获取。
 
 与此同时，Eureka Client会开启一些定时任务，按固定频率向Eureka Server轮询其他客户端的注册信息（注册信息会缓存在本地一段时间），当然也少不了发送心跳包。
 
@@ -109,7 +109,7 @@ Ribbon 有以下特性：
 
 常见的RPC调用，有二进制流序列化+TCP协议 或 二进制流序列化+Http协议(比如Hessian)，序列化/反序列化协议既可以是原生JAVA，也可以是其他序列化协议（比如，[Kryo](https://github.com/EsotericSoftware/kryo/wiki) 和 [Fst](https://github.com/RuedigerMoeller/fast-serialization/wiki) ,Thrift,ProtoBuf)；有文本序列化+ Http协议，使用JSON或XML反序列化。
 
-最终，我们的RPC调用决定采用Http协议+JSON文本序列化的方式，这样即可以直接将服务作为Rest接口暴露出去，也更容易对众多服务进行自动化测试。
+最终，我们的RPC调用决定采用Http协议+JSON文本序列化的方式，这样即可以直接将服务作为REST接口暴露出去，也更容易对众多服务进行自动化测试。
 
 而完成这一RPC调用的组件，就是 [Netflix Feign](https://github.com/Netflix/feign)。
 
@@ -132,28 +132,28 @@ Service SPI的每个接口都将被Feign代理（JAVA 动态代理），当方�
 
 大家也看到了，URL的主机为”city“，也就是`@FeignClient("city")`中的”city“,”city“被称为**虚拟主机地址**，是服务的标识。一个服务通常是一个Eureka Client，服务会部署多个节点。
 
-此时，发起RPC请求之前需向Eureka Server查询该虚拟主机对应的节点，再由Ribbon选定一个节点。
+此时，发起RPC请求之前需向Eureka Server查询该虚拟主机的所有节点，再由Ribbon选定一个节点。
 
 但我们也可以直接指定请求的url：`@FeignClient(url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/citys/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
 
 Url的主机地址被动态解析和替换之后，Feign开始发送请求，最后对响应信息反序列化。
 
-#### 流量整形以及断路器
+#### 网络流量整形以及断路器
 正常情况下，一次完整的RPC请求如上文所言。
 
 俗话说，风平浪静时，人人都可以是舵手。
 
 但当 Service Provider 无法及时响应时？有多种原因会导致此类情况。
 
-* 客户端业务逻辑调整，导致某个时间点访问量暴增，大量请求被分发至Service Provider，服务提供方过载。
+* 客户端业务逻辑调整，导致某个时间点访问量暴增，大量请求被分发至Service Provider，服务提供方过载，数据库服务器CPU 100%，导致其他服务访问数据库时也超时。
 * 服务提供方业务调整，原先一个50ms就能响应的请求，现在需要300ms，从而导致客户端大量线程阻塞，进而失去响应。
 * …..
 
-通常服务不可用时，终端用户可能不停的刷新页面，从而加剧问题。
+通常服务不可用时，终端用户可能不停地刷新页面，从而加剧问题。
 
 以上情况我们统称为：服务过载。
 
-为了应对分布式环境中服务过载可能引起的"雪崩反应”，我们启用了Netflix 公司的开源组件 [Hystrix](https://github.com/Netflix/Hystrix/wiki)。
+为了应对分布式环境中服务过载可能引起的"雪崩反应”，我们启用了Netflix公司的开源组件 [Hystrix](https://github.com/Netflix/Hystrix/wiki)。
 
 下面我简要介绍一下Hystrix的工作流程：
 
@@ -255,7 +255,7 @@ SE团队的API网关域名为（集成环境）：[http://api.route.dooioo.org](
 附带说明一点：我们的API网关已支持CORS，Web Ajax请求已无需考虑跨域的问题了。
 
 #### 配置中心 Spring Cloud Config
-对应用配置的管理，Spring Cloud目前默认的实现是使用Git 来集中存储，相关模块为：[Spring-Cloud-Config](http://cloud.spring.io/spring-cloud-config/)。
+对应用配置的管理，Spring Cloud目前默认的实现是使用Git集中存储，这样多节点也只有一份副本，管理和维护起来比较容易，相关模块为：[Spring-Cloud-Config](http://cloud.spring.io/spring-cloud-config/)。
 
 当Spring Cloud项目启动时，首先会使用`PropertySourceLocator`自动加载远程Git仓库里的配置文件。
 
