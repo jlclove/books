@@ -11,12 +11,12 @@
 ![自带版本号]({{book.imagePath}}/parts/chapter1/images/p2point.png)
 
 ##### 策略三: 版本兼容（Compatible）
-同策略一：平台API只有一个版本，但是最新版本需要兼容以前版本的API行为。
+同策略一：平台API只有一个版本，但是最新版本需要兼容历史版本API的行为。
 
 ![版本兼容]({{book.imagePath}}/parts/chapter1/images/comp-vers.png)
 
 
-API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴表示API接口升级的开销）：
+API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴表示API升级的开销）：
 
 ![相对开销对比]({{book.imagePath}}/parts/chapter1/images/results.png)
 
@@ -30,7 +30,7 @@ API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴
 
 其次，考虑到实际项目的情况，版本控制需结合策略二和策略三：优先提供统一的兼容版本，如果新版本无法兼容历史版本，则升级版本号。
 
-而对于历史版本的支持最好有时间和用户限制，即老版API支持到一定时间就删除，新用户必须使用新版API，否则10来个API版本共存对API的维护人员来说就是一场噩梦了。
+而对于历史版本的支持最好有时间和用户限制，即老版本API支持到一定时间后就删除，新用户必须使用新版API，否则10来个API版本共存对API的维护人员来说就是一场噩梦了。
 
 以上内容参考自：[understanding-the-costs-of-versioning](http://www.ebpml.org/blog2/index.php/2013/11/25/understanding-the-costs-of-versioning)
 

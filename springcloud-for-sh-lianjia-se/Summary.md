@@ -17,3 +17,5 @@ bui #Summary
 	* [包结构规范](parts/chapter2/spi-package-structure.md)
 	* [Model规范](parts/chapter2/spi-model.md)
 	* [接口以及方法规范](parts/chapter2/spi-interface.md)
+	* [2·3·3](parts/chapter2/2-3-3.md)
+	* [接口安全性](parts/chapter2/spi-security.md)

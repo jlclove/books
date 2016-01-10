@@ -17,7 +17,7 @@ Web浏览器对跨域（Cross Domain)请求有着严格的安全限制（same-or
 Ajax跨域有两种解决方案：JSONP(JSON with Padding) 、 CORS(Cross-origin resource sharing 跨域资源共享)。
 
 ### JSONP
-JSONP 是 **JSON** with **P**adding的简写，JSONP被Web开发者用来克服浏览器的同源策略、以获取其他域名提供的数据。
+JSONP 是 **JSON** with **P**adding的简称，JSONP被Web开发者用来克服浏览器的同源策略、以获取其他域名提供的数据。
 
 假设以下请求： 
 > GET  http://api.route.dooioo.org/loupan/server/v1/citys/1
@@ -192,7 +192,11 @@ Access-Control-Allow-Credentials: true
 Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token  
 ```
 
-6，浏览器判断服务端响应的Access-Control-Allow-Origin的值是否包含当前Host：stackoverflow.com，包含则意味着可以跨域访问资源。另外，* 意味着所有主机都可以访问此域名。如果此响应头不存在或响应头不包括当前主机，浏览器直接丢弃数据，拒绝跨域请求。 
+6，浏览器判断服务端响应的Access-Control-Allow-Origin的值是否包含当前Host：stackoverflow.com，包含则意味着可以跨域访问资源。
+
+另外，* 意味着所有主机都可以访问此域名。
+
+**如果此响应头不存在或响应头不包括当前主机，浏览器直接丢弃数据，拒绝跨域请求**。 
 
 ![CORS简单跨域请求]({{book.imagePath}}/parts/chapter1/images/cors-simple-request.png)
 
@@ -240,7 +244,7 @@ CORS的不足：
 
    * 预校验请求（Preflighted Request)  
     所有非简单请求，必须先发送HTTP METHOD 为 OPTION的Preflighted 请求，以决定是否可以安全的发送实际请求。  
-符合以下任一条件都会发送预校验请求： Http METHOD不是GET、HEAD 或者POST，比如PUT/DELETE/PUT/PATCH；如果使用POST发送请求，但Cotent-Type不是application/x-www-form-urlencoded、multipart/form-data 或text/plain，比如application/xml、text/xml；设置自定义请求头，比如 X-Api-Version。  
+符合以下任一条件都会发送预校验请求： Http METHOD不是GET、HEAD 或者POST，比如PUT/DELETE/PATCH；如果使用POST发送请求，但Cotent-Type不是application/x-www-form-urlencoded、multipart/form-data 或text/plain，比如application/xml、text/xml；设置自定义请求头，比如 X-Api-Version。  
 
     ```
      function callOtherDomain(){
