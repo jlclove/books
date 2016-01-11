@@ -1,3 +1,4 @@
+<!-- toc -->
 ### Model 规范 
 
 *  所有Model必须实现```java.io.Serializable```, 推荐指明序列化版本号```serialVersionUID```，一般保持默认值即可。
@@ -10,6 +11,7 @@
 
 为了简化model的编码工作，特别是大量字段的model，我们之后将提供根据数据库表（建表时要给列添加注释）自动生成SPI model，自动生成注释，使之符合以上规范。
 
+### 示例
 下面示例为mini楼盘字典实体楼盘（resblock)的model:
 
 ```

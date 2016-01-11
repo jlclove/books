@@ -5,5 +5,19 @@
 		"lorikSpiViewVersion": "2.1.2",
 		"lorikCoreVersion": "1.1.0",
 		"lorikApidocletVersion": "1.0.0"
-	}
+	},
+	"plugins": ["atoc","mermaid","tbfed-pagefooter","mcqx","fbqx","expandable-chapters"],
+    "pluginsConfig": {
+        "atoc": {
+            "addClass": true,
+            "className": "atoc"
+        },
+        "tbfed-pagefooter": {
+		  "copyright":"&copy RD@上海链家 ",
+		  "modify_label": "文件修订时间：",
+		  "modify_format": "YYYY-MM-DD HH:mm"
+		},
+		"expandable-chapters":{}
+    }
+	
 }

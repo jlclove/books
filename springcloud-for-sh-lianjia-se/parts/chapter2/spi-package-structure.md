@@ -1,3 +1,4 @@
+<!-- toc -->
 ### SPI包结构
 SPI由model、业务枚举以及接口组成，但我们必须考虑如何对接口功能进行**版本控制**。
 
@@ -25,19 +26,22 @@ com.lianjia.sh.loupan.spi
      LoupanBizCode.class
      CitySpi.class
 ```
-     
+
+#### 包前缀规范   
 首先，package前缀的规范: **com.lianjia.sh.项目名.功能模块名.spi**。也就是说，包前缀为SPI模块名。如果功能简单，则可以忽略功能模块。下面，我列举几个正确的包前缀：
 
 *  com.lianjia.sh.loupan.search.spi
 *  com.lianjia.sh.loupan.core.spi
 *  com.lianjia.sh.loupan.statistics.spi
 
+#### 子包目录
 其次，按版本号分成几个sub package，比如，v1，v2。
 
 v1或v2由model（业务实体）、具体版本的SPI接口V1/V2.class（留给server实现） 组成。
 
 同时，与v1,v2包并列有source包（业务枚举）、业务码BizCode.class，以及不带版本号后缀的Spi.class，这是供客户端调用的。
 
+#### 包结构示例
 下面示例为loupan-search-spi 模块的包结构：
 
 ```
@@ -135,7 +139,7 @@ public void doXXX(){
 在实践的过程中，我们可能会进一步调整方案B。
 
 
-#### 业务码
+### 业务码
 
 一般REST接口都会声明一系列业务错误码，这便于客户端定位问题。
 

@@ -1,3 +1,4 @@
+<!-- toc -->
 ### Ajax跨域
 Web浏览器对跨域（Cross Domain)请求有着严格的安全限制（same-origin security policy 同源安全策略）。  
 
@@ -19,6 +20,7 @@ Ajax跨域有两种解决方案：JSONP(JSON with Padding) 、 CORS(Cross-origin
 ### JSONP
 JSONP 是 **JSON** with **P**adding的简称，JSONP被Web开发者用来克服浏览器的同源策略、以获取其他域名提供的数据。
 
+#### JSONP请求流程及原理
 假设以下请求： 
 > GET  http://api.route.dooioo.org/loupan/server/v1/citys/1
 
@@ -88,6 +90,7 @@ parseResponse({
 
 至此，一次完整的JSONP请求执行完毕。
 
+#### JSONP应用限制
 综上，JSONP必须满足以下条件：
 * 必须依赖HTML标签 &lt;script&gt;的src属性来发起请求。
 * JSONP响应数据本质上是js脚本。
@@ -114,21 +117,22 @@ $.ajax({
 
 ```
 
-JSONP不足之处：
+#### JSONP不足之处
  1. 仅支持Http GET，不支持其他Http Method（POST/DELETE/PATCH/PUT)。
  2. 需要服务端配合，服务端需要理解JSONP语义并包装原始数据。
 
-JSONP优点： 兼容所有版本的浏览器，只要能正确解释执行JavaScript。
+#### JSONP优点
+ 兼容所有版本的浏览器，只要能正确解释执行JavaScript。
 
 ### 跨域资源共享（CORS)
  CORS是**C**ross-**O**rigin **R**esource **S**haring的简称。CORS规范定义了一系列 Request Header和Response Header，浏览器和服务端程序根据Request/Response Header做出不同的行为。
  
-##### CORS Request Header
+#### CORS Request Header
 * Origin
 * Access-Control-Request-Method
 * Access-Control-Request-Headers  
 
-##### CORS Response Header
+#### CORS Response Header
 * Access-Control-Allow-Origin
 * Access-Control-Allow-Credentials
 * Access-Control-Expose-Headers
@@ -136,7 +140,7 @@ JSONP优点： 兼容所有版本的浏览器，只要能正确解释执行JavaS
 * Access-Control-Allow-Methods
 * Access-Control-Allow-Headers
 
-##### CORS 请求流程
+#### CORS 请求流程
 
 1， 从网站stackoverflow.com 向我们的API网关api.route.dooioo.org 发起Ajax请求： 
 ```javascript
@@ -201,7 +205,7 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
 ![CORS简单跨域请求]({{book.imagePath}}/parts/chapter1/images/cors-simple-request.png)
 
 
-##### CORS 应用要求
+#### CORS 应用限制
  可以看到，使用CORS实现跨域时，浏览器必须支持CORS规范，服务端也必须支持CORS规范。
  
  目前以下版本的浏览器都支持CORS规范：
@@ -213,7 +217,7 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
 
 如果你想实现自己的CORSFilter，请参考 [W3c CORS 规范](http://www.w3.org/TR/cors/)。另外，请不要在拦截器里解析CORS请求，因为Tomcat会自动响应OPTION请求。
 
-##### CORS的优点和不足
+#### CORS 优点和不足
  CORS的优点：
   1. 支持所有Http Method( GET/POST/HEAD/PUT/DELETE/PATCH/OPTION)。
   2. 仅配置CORS过滤器即可，业务接口无需关心跨域问题、不用改变响应数据。
@@ -229,8 +233,10 @@ CORS的不足：
    可以看到IE6/7已属于小众市场，可以忽略，目前主流版本IE8/9/10。
    
    因此使用CORS解决跨域请求是首选。
-   
-   ##### CORS 术语（Terminology）
+#### CORS请求流程图（节选自Wiki）
+![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.png)
+  
+####  CORS 术语（Terminology）
  
    * 简单方法 （simple method)  
 		HTTP METHOD: GET/HEAD/POST ，大小写敏感。
@@ -256,10 +262,8 @@ CORS的不足：
       invocation.onreadystatechange = handler;
       invocation.send(body); 
     }
-}
-  ```
-   ##### CORS请求流程图（节选自Wiki）
-   ![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.png)
+}  
+```
    
  <br>
  [^1]: 简单跨域请求，指请求方法为**简单方法**并且请求头为**简单头部**的请求。也就是说简单跨域请求至少满足两个条件： Http Method 必须为GET、HEAD、POST之一，可被手动设置的Request Header为Accept、Accept-Language/Content-Language以及Content-Type（Content-Type可选值为application/x-www-form-urlencoded、 multipart/form-data、text/plain)。
