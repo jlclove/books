@@ -2,7 +2,7 @@
 ### Ajax跨域
 Web浏览器对跨域（Cross Domain)请求有着严格的安全限制（same-origin security policy 同源安全策略）。  
 
-下图是从网站stackoverflow.com 向我们的API网关api.route.dooioo.org 发起的一个跨域Ajax请求，直接被浏览器拒绝：  
+下图是从网站`stackoverflow.com` 向我们的API网关`api.route.dooioo.org` 发起的一个跨域Ajax请求，直接被浏览器拒绝：  
 
 ```http
   $.get("http://api.route.dooioo.org/loupan/server/v1/citys")  
@@ -13,11 +13,13 @@ Web浏览器对跨域（Cross Domain)请求有着严格的安全限制（same-or
 
 ![跨域请求拒绝]({{book.imagePath}}/parts/chapter1/images/crossdomain-denied.png)
 
-跨域请求发送时浏览器会添加Request Header: Origin，如果服务端检测到有此Header，那么就可以断定此请求是跨域的。Origin为请求发起方的主机名。  
+跨域请求发送时浏览器会添加Request Header: `Origin`，如果服务端检测到有此Header，就可以断定此请求是跨域的。  
+  
+Origin为请求发起方的主机名。  
 
 ![跨域请求头部]({{book.imagePath}}/parts/chapter1/images/crossdomian-headers.png)
 
-Ajax跨域有两种解决方案：JSONP(JSON with Padding) 、 CORS(Cross-origin resource sharing 跨域资源共享)。
+Ajax跨域有两种解决方案：`JSONP(JSON with Padding)` 、 `CORS(Cross-origin resource sharing 跨域资源共享)`。
 
 ### JSONP
 JSONP 是 **JSON** with **P**adding的简称，JSONP被Web开发者用来克服浏览器的同源策略、以获取其他域名提供的数据。
@@ -38,24 +40,24 @@ GET  http://api.route.dooioo.org/loupan/server/v1/citys/1
  }
 ```
 如果将此URL赋给HTML标签 &lt;script&gt; 的src：
-```javascript
-<script type="application/javascript"
+``` javascript
+<script type=“text/javascript"
         src="http://api.route.dooioo.org/loupan/server/v1/citys/1">
 </script>
 ```
-那么浏览器会自动下载脚本文件，解释并执行脚本内容。而此时的JSON响应数据会被当做JavaScript代码块，并且抛出js语法错误的异常。
+那么浏览器会自动下载脚本文件，解释并执行脚本内容。而此时的JSON响应数据会被当做`JavaScript`代码块，并且抛出js语法错误的异常。
 
-即使JSON数据被浏览器解释为JavaScript Object ，但由于缺少变量赋值，比如
- val={Response Object}，JS也无法访问响应数据。
+即使JSON数据被浏览器解释为`JavaScript Object` ，但由于缺少变量赋值，比如
+ `val={Response Object}`，JS也无法访问响应数据。
  
  当使用JSONP模式时，&lt;script&gt; 属性src的响应数据必须使用JS代码包装（通常是函数调用），比如以下脚本引用：  
 
  ``` javascript
-<script type="application/javascript"
+<script type=“text/javascript"
         src="http://api.route.dooioo.org/loupan/server/v1/citys/1">
 </script>
 ```
-如果：api.route.dooioo.org/loupan/server/v1/citys/1响应数据为：
+如果：`api.route.dooioo.org/loupan/server/v1/citys/1`响应数据为：
 ```json
 responseObj= {
    "id": 1,
@@ -63,14 +65,14 @@ responseObj= {
    "name" : "上海市"
  }
 ```
-那么浏览器下载脚本文件、解释执行之后，全局变量responseObj就可以被其他js代码访问了。
+那么浏览器下载脚本文件、解释执行之后，全局变量`responseObj`就可以被其他js代码访问了。
 
 也就是说，JSONP能起作用，服务端必须用JS代码包装原始JSON数据后响应。这里包装用的JS代码便被称为：**Padding**。
 
 在实际使用中，客户端通常会预定义一个函数，也叫回调函数，比如:
 
 ``` javascript
-<script type="application/javascript">
+<script type=“text/javascript">
   function parseResponse(data){
     //操作json数据
   }
@@ -79,7 +81,7 @@ responseObj= {
 函数名通过一个约定的查询参数callback 或者jsonp发送给服务端：
 
 ``` javascript
-<script type="application/javascript"
+<script type=“text/javascript"
         src="http://api.route.dooioo.org/loupan/server/v1/citys/1?callback=parseResponse">
 </script>
 ```
@@ -92,7 +94,7 @@ parseResponse({
  });
 ```
 
-浏览器接收到响应数据后，将脚本内容解释为：执行函数调用parseResponse(data)。
+浏览器接收到响应数据后，将脚本内容解释为：执行函数调用`parseResponse(data)`。
 
 至此，一次完整的JSONP请求执行完毕。
 
@@ -103,15 +105,16 @@ parseResponse({
 * 客户端和服务端必须相互配合。  
 客户端预定义回调函数，将方法名通过约定查询参数callback或jsop传给服务端，服务端使用方法名包装原始响应数据。
 
-如果是动态Ajax请求，客户端必须动态预定义函数，动态创建&lt;script&gt;标签。
-通常使用JavaScript库处理通用逻辑，比如JQuery，我们只需关注业务回调函数即可。
-以下代码为JQuery jsonp示例：
+如果是动态Ajax请求，客户端必须动态预定义函数，动态创建&lt;script&gt;标签。  
+
+通常使用JavaScript库处理通用逻辑，比如`JQuery`，我们只需关注业务回调函数即可。
+以下代码为JQuery JSONP示例：
 
 ```javascript
 $.ajax({
     // script src
     url: "http://api.route.dooioo.org/loupan/server/v1/citys/1",
-    // The name of the callback parameter
+    // 传到服务端的查询参数-函数名
     jsonp: "callback",
     // Tell jQuery we're expecting JSONP
     dataType: "jsonp",
@@ -124,8 +127,8 @@ $.ajax({
 ```
 
 #### JSONP不足之处
- 1. 仅支持Http GET，不支持其他Http Method（POST/DELETE/PATCH/PUT)。
- 2. 需要服务端配合，服务端需要理解JSONP语义并包装原始数据。
+ 1. 仅支持Http GET，不支持其他Http Method（`POST/DELETE/PATCH/PUT`)。
+ 2. 需要服务端配合，服务端需要理解`JSONP语义`并包装原始数据。
 
 #### JSONP优点
  兼容所有版本的浏览器，只要能正确解释执行JavaScript。
@@ -153,7 +156,7 @@ $.ajax({
 $.get("http://api.route.dooioo.org/loupan/server/v1/citys") 
 ``` 
  
-2， 浏览器发现当前主机域名为：```stackoverflow.com```，但请求的主机域名为：```api.route.dooioo.org```，断定请求为跨域请求，主动添加Request Header-Origin:
+2， 浏览器发现当前主机域名为：```stackoverflow.com```，但请求的主机域名为：```api.route.dooioo.org```，断定请求为跨域请求，主动添加Header`Origin`:
 ```javascript
  Request URL: http://api.route.dooioo.org/loupan/server/v1/citys
  Request Method: GET
@@ -161,7 +164,7 @@ $.get("http://api.route.dooioo.org/loupan/server/v1/citys")
 ```http  
  Origin: stackoverflow.com
 ```
-3， 浏览器根据CORS规范，判断请求是否为**简单跨域请求** [^1]（Simple cross-origin Request)。  
+3， 浏览器根据CORS规范，判断请求是否为**简单跨域请求** [^1]（Simple Cross-Origin Request)。  
 
 4， 如果不是简单跨域请求，浏览器将发起一个预校验（Preflight）的```OPTION``` 请求。  
 **Preflighted请求** [^2]会发送 ```Access-Control-Request-Method```(客户端发起Http请求的Method) 、```Access-Control-Request-Headers```（客户端自定义的Request Header）,服务端根据Header判断跨域请求是否安全：
@@ -212,7 +215,9 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
 
 ![CORS简单跨域请求]({{book.imagePath}}/parts/chapter1/images/cors-simple-request.png)
 
-
+#### CORS请求流程图（节选自Wiki）
+![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.png)
+ 
 #### CORS 应用限制
  可以看到，使用CORS实现跨域时，浏览器必须支持CORS规范，服务端也必须支持CORS规范。
  
@@ -239,13 +244,11 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
     
    可以看到IE6/7已属于小众市场，可以忽略，目前主流版本IE8/9/10。
    
-   因此**使用CORS解决跨域请求是首选**。
-#### CORS请求流程图（节选自Wiki）
-![CORS请求流程图]({{book.imagePath}}/parts/chapter1/images/cors.png)
-  
+   因此**使用CORS解决跨域请求是首选**。 
+   
 ####  CORS 术语（Terminology）
  
-##### 简单方法 （simple method)  
+##### 简单方法 （Simple Method)  
 HTTP METHOD为： ```GET/HEAD/POST``` ，大小写敏感。
 ##### 简单头部 （Simple Header)  
 Request Header为```Accept,Accept-Language,Content-Language```，以及Content-Type MIME类型为 ```application/x-www-form-urlencoded, multipart/form-data,  text/plain```的Header，大小写不敏感。
@@ -277,8 +280,8 @@ Response Header为```Cache-Contro,Content-Language,Content-Type,Expires,Last-Mod
     }
 }  
 ```
-   
- <br>
- [^1]: 简单跨域请求，指请求方法为**简单方法**并且请求头为**简单头部**的请求。也就是说简单跨域请求至少满足两个条件： Http Method 必须为GET、HEAD、POST之一，可被手动设置的Request Header为Accept、Accept-Language/Content-Language以及Content-Type（Content-Type可选值为application/x-www-form-urlencoded、 multipart/form-data、text/plain)。
-<br>
+<br/>  
+
+[^1]: 简单跨域请求，指请求方法为**简单方法**并且请求头为**简单头部**的请求。也就是说简单跨域请求至少满足两个条件： Http Method 必须为GET、HEAD、POST之一，可被手动设置的Request Header为Accept、Accept-Language/Content-Language以及Content-Type（Content-Type可选值为application/x-www-form-urlencoded、 multipart/form-data、text/plain)。
+
 [^2]: 预校验请求（Preflighted Request)指所有非简单请求，符合以下任一条件都会发送预校验请求： Http METHOD不是GET、HEAD 或者POST，比如PUT/DELETE/PUT/PATCH；如果使用POST发送请求，但Cotent-Type不是application/x-www-form-urlencoded、multipart/form-data 或text/plain，比如application/xml、text/xml；设置自定义请求头，比如 X-Api-Version。
