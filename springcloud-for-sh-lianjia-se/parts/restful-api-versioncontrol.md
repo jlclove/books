@@ -50,7 +50,7 @@ API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴
 不足之处是：版本号在URI中破坏了REST的HATEOAS（hypermedia as the engine of application state）规则，版本号和资源之间并无直接关系。
 
 ##### 自定义Request Header
-客户端在发送请求的时候，需要一起发送自定义的Request Header，比如： X-Api-Version，来指明请求那个版本的接口。
+客户端在发送请求的时候，需要一起发送自定义的Request Header，比如： X-Api-Version或Accept-Version，来指明请求那个版本的接口。
 > GET http://api.route.dooioo.org/client/token
 
 > X-Api-Version: 1
