@@ -3,11 +3,11 @@
 
 *  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。  
 
-* RequestMapping 只能添加在方法上，不能添加在接口上。  
+* ```RequestMapping``` 只能添加在方法上，不能添加在接口上。  
   RequestMapping的value以版本号为前缀(“/version/path”)，method必须提供并且只能限定为一种，比如：  
 ```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```  
   
-* 接口方法的名称必须以版本号为后缀，比如：searchV1（），findByIdV1();  
+* 接口方法的名称必须以版本号为后缀，比如：```searchV1（）```，```findByIdV1()```;  
 
 * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
 
@@ -18,8 +18,7 @@
  
 下面示例为mini楼盘字典楼盘SPI的声明：
 
-```
-
+``` java
 package com.lianjia.sh.samples.loupan.spi.v1;
 /**
  * 楼盘SPIV1
@@ -56,7 +55,7 @@ public interface ResblockSpiV1 {
 
 ### 方法注释规范
 
-```
+``` java
   /**
   * 方法详细说明
   * @author 作者名或者产品线，邮件等
@@ -73,7 +72,7 @@ public interface ResblockSpiV1 {
 
 上述方法注释的模板可以在IDE中配置，以下是Eclipse Code Comment配置：
 
-```
+``` java
 /**
   * 
   * @author huisman
@@ -93,9 +92,9 @@ loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples
  
  
  
-还有一点需要注意：供客户端调用的SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的spring.application.name，一般是实现方模块名，代码示例如下：
+还有一点需要注意：供客户端调用的SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的```spring.application.name```，一般是实现方模块名，代码示例如下：
 
-```
+``` java
 @FeignClient("loupan-core-server")
 public interface BizcircleSpi extends BizcircleSpiV1 {
 }

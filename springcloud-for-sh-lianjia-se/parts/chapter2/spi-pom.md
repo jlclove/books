@@ -1,11 +1,11 @@
 ###pom.xml
 SPI模块只需引入三个jar：
 
-*  spring-webmvc   
+*  `spring-webmvc`   
 	仅为了代码编译通过，scope为provided。
-*  spring-cloud-netflix-core   
+*  `spring-cloud-netflix-core`   
 	仅为了代码编译通过，scope为provided
-*  lorik-spi-view   
+*  `lorik-spi-view`   
  我们内部对spi层的支持，包括登录校验、分页、Model的视图支持、支持Spring MVC 标注（@RequestParam，@Pathvariable,@RequestHeader)的继承等。  
 必须显式依赖特定版本号，**目前版本号为{{ book.lorikSpiViewVersion }}**。
 

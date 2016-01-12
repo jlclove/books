@@ -3,9 +3,9 @@
 
 *  所有Model必须实现```java.io.Serializable```, 推荐指明序列化版本号```serialVersionUID```，一般保持默认值即可。
 
-* 所有Model必须提供toString()，但equals()和hashCode()看具体业务，不做强制要求。  
+* 所有Model必须提供```toString()```，但```equals()```和```hashCode()```看具体业务，不做强制要求。  
 
-* 所有Model字段的Getter方法须提供注释，如果是枚举值、或状态值，须明确列举各个状态的相应说明，但Setter不做要求。   
+* 所有Model字段的```Getter```方法须提供注释，如果是枚举值、或状态值，须明确列举各个状态的相应说明，但```Setter```不做要求。   
  
 * 所有Model必须提供默认构造函数。
 
@@ -14,11 +14,10 @@
 ### 示例
 下面示例为mini楼盘字典实体楼盘（resblock)的model:
 
-```
+``` java
 package com.lianjia.sh.samples.loupan.spi.v1.model;
 /**
  * 楼盘
- * 
  * @author huisman
  * @since v1
  * @Copyright (c) 2015, Lianjia Group All Rights Reserved.

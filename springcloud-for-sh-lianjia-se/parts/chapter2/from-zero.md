@@ -45,7 +45,7 @@ Service SPI ，我们可以将之看做```Class```类型为接口的Service。�
   }
 ```
 
-当基于微服务开发时，因为这是我们的第一个版本，按照我们的规范，类名应该改为：CitySpiV1，方法名添加后缀V1，方法注释添加 @author、@version、@since、@summary（请留意doc tag的顺序）:
+当基于微服务开发时，因为这是我们的第一个版本，按照我们的规范，类名应该改为：`CitySpiV1`，方法名添加`后缀V1`，方法注释添加 `@author`、`@version`、`@since`、`@summary`（请留意doc tag的顺序）:
 
 ```java
 public interface CitySpiV1{
@@ -102,15 +102,15 @@ public interface CitySpiV1{
 ```
 如果我们的RPC调用是TCP+二进制流或者HTTP+二进制流，那么SPI声明就完成了。
 
-但我们的SPI调用方使用Netflix Feign、以HTTP+JSON的方式发起RPC调用，所以必须告诉Feign如何发起HTTP请求，包括HTTP方法、HTTP请求路径、请求参数等。
+但我们的SPI调用方使用```Netflix Feign、以HTTP+JSON```的方式发起RPC调用，所以必须告诉Feign如何发起HTTP请求，包括HTTP方法、HTTP请求路径、请求参数等。
 
-简单来说，SPI调用方就是一个Http Client，它调用SPI接口，背后其实是对提供方（Server）发起HTTP请求以获取数据。 所以 CitySpiV1的每个方法必须提供必要的元数据信息以便Feign客户端（SPI调用方）能够构造正确的Http请求。
+简单来说，SPI调用方就是一个`Http Client`，它调用SPI接口，背后其实是对提供方（Server）发起HTTP请求以获取数据。 所以 `CitySpiV1`的每个方法必须提供必要的元数据信息以便Feign客户端（SPI调用方）能够构造正确的Http请求。
 
 Feign定义了接口：```Contract```，用于解析SPI接口方法的元数据（方法或类上的Annotation），从而构造合适的HTTP请求。  
 
-Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spring MVC标注 @RequestMapping、@PathVariable、@RequestParam、@RequestHeader 给接口方法添加元数据。
+Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spring MVC标注 `@RequestMapping`、`@PathVariable`、`@RequestParam`、`@RequestHeader` 给接口方法添加元数据。
 
-但是请注意，Spring Cloud目前仅支持 @RequestMapping、@PathVariable、@RequestParam、@RequestHeader，而且用法上有一点限制，具体来说：
+但是请注意，Spring Cloud目前仅支持 `@RequestMapping`、`@PathVariable`、`@RequestParam`、`@RequestHeader`，而且用法上有一点限制，具体来说：
 * @RequestMapping必须指定method，并且只能指定一个Http Method。  
 ```java
  // 报错
@@ -140,7 +140,7 @@ Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spri
 ```
 
 
-为了配合Neflix Feign以HTTP+JSON这种方式进行RPC调用，我们必须给方法添加合适的Spring MVC标注。Request Mapping的url最好符合REST规范，以版本号开头，比如"v1"，大家可以参考第一章：
+为了配合Neflix Feign以`HTTP+JSON`这种方式进行RPC调用，我们必须给方法添加合适的Spring MVC标注。`Request Mapping`的url最好符合REST规范，以版本号开头，比如"v1"，大家可以参考第一章：
 [扩展：REST API最佳实践](../restful-api-v1.4.html)。
 
 更新后的代码如下：
@@ -208,15 +208,15 @@ public interface CitySpiV1{
 ```
 
 最后，我们检查各个接口，看那些方法需要登录校验，那些方法可以公开访问：
-* existsV1，findAllV1，findByGbCodeV1可以公开访问（REST 或者FeignClient），因为不是敏感数据，所以无需登录校验，我们手动添加@LoginNeedless；由于findAllV1，findByGbCodeV1支持REST访问，而响应可能为null，我们添加标注@LorikRest，启用特性Feature.NullTo404（REST访问时返回null则响应404）。  
-另外，existsV1方法实现时有业务码抛出，所以用LorikRest的属性codes枚举出来以便生成API文档。  
+* `existsV1`，`findAllV1`，`findByGbCodeV1`可以公开访问（REST 或者FeignClient），因为不是敏感数据，所以无需登录校验，我们手动添加`@LoginNeedless`；由于`findAllV1`，`findByGbCodeV1`支持REST访问，而响应可能为`null`，我们添加标注`@LorikRest`，启用特性`Feature.NullTo404`（REST访问时返回null则响应404）。  
+另外，`existsV1`方法实现时有业务码抛出，所以用`LorikRest`的属性`codes`枚举出来以便生成API文档。  
 如果方法不支持REST方式访问，可不加此标注。  
 
-* addV1肯定需要登录校验的，默认情况下，接口方法都会进行登录校验。  
-一般记录创建人就是当前系统登录的用户，所以我们要把 @RequestParam(value="cuser")换成 @RequestHeader(StandardHttpHeaders.X_Login_UserCode)int cuser)。  
-因为API网关自动将登录用户的信息添加在Request Header里，目前只添加了StandardHttpHeaders.X_Login_CompanyId（登录员工的公司ID）和StandardHttpHeaders.X_Login_UserCode（登录员工工号），服务提供方如果有业务需要，SPI必须使用@RequestHeader声明。
+* `addV1`肯定需要登录校验的，默认情况下，接口方法都会进行登录校验。  
+一般记录创建人就是当前系统登录的用户，所以我们要把 `@RequestParam(value="cuser”)`换成 `@RequestHeader(StandardHttpHeaders.X_Login_UserCode)int cuser)`。  
+因为API网关自动将登录用户的信息添加在`Request Header`里，目前只添加了`StandardHttpHeaders.X_Login_CompanyId`（登录员工的公司ID）和`StandardHttpHeaders.X_Login_UserCode`（登录员工工号），服务提供方如果有业务需要，SPI必须使用`@RequestHeader`声明。
 
-最终的CitySpiV1代码如下：
+最终的`CitySpiV1`代码如下：
 
 ```java
 public interface CitySpiV1{

@@ -1,10 +1,10 @@
-开发Maven多模块项目时，可以把各模块的公共配置放在Parent项目的pom.xml里。
+开发Maven多模块项目时，可以把各模块的公共配置放在Parent项目的`pom.xml`里。
 
-Spring Cloud为了简化项目版本依赖的管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为spring-cloud-starter-parent，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
+`Spring Cloud`为了简化项目版本依赖的管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为`spring-cloud-starter-parent`，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
 
 **我们采用的Spring Cloud 版本为：Brixton.M4**
 
-```
+``` xml
      <parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>

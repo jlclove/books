@@ -37,7 +37,7 @@
   
 有时候，仅仅是实现方式的稍微调整，比如以下代码是向远程服务器发起Http调用：
  
-```java
+``` java
 	RemoteRequest  
 	.to(“http://api.route.dooioo.org/loupan/server/v1/city/{id}”)
     .withParam("id",3).get(City.class);
@@ -104,25 +104,27 @@ public interface DistrictSpiV1{
 
 新增了两个用在方法上的Annotation：
 
-*    @LoginNeedless  
-	指明此接口无需登录，即可访问。如果无此标注，则登录后才能访问，否则提示无权限。该标注对应接口文档的安全性说明。
-*    @LorikRest  
-	可以配置此方法通过API网关（api.route.dooioo.org)访问时的一些REST特性和业务码。比如：  
-```@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})```
-可以理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404。  
-	codes指明此方法可能抛出的业务错误码。非必须，如果方法实现会抛出业务错误码，则需显式在方法上声明。业务码对应接口文档的业务码说明。
+*    ```@LoginNeedless```   
+
+	指明此接口无需登录，即可访问。如果无此标注，则登录后才能访问，否则提示无权限。该标注对应接口文档的安全性说明。  
+
+*   ```@LorikRest```     
+
+	可以配置此方法通过API网关（api.route.dooioo.org)访问时的一些REST特性和业务码。  
+比如：```@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})```，可理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
+非必须，如果方法实现会抛出业务错误码，则需显式在方法上声明。业务码对应接口文档的业务码说明。
 
 新增加了个doc tag: @summary。
 
-*  @summary 将会被展示为接口方法的功能说明（一般不超过20字）
+*  ```@summary``` 将会被展示为接口方法的功能说明（一般不超过20字）
 
 
 其他doc tag说明如下：<br>
-@author tag既可以是负责人名，也可以是邮件地址或者产品线团队。<br>
-@param 我们用于显示方法参数的说明。<br>
+```@author``` tag既可以是负责人名，也可以是邮件地址或者产品线团队。<br>
+```@param``` 我们用于显示方法参数的说明。<br>
 Spring MVC的标注将会被正确解释为符合Http 语义的说明，比如路径参数，请求参数。<br>
-@version REST接口版本号 。<br>
-@since 接口开发或发布日期，比如：2016-01-01，追加在接口功能里。<br>
+```@version``` REST接口版本号 。<br>
+```@since``` 接口开发或发布日期，比如：2016-01-01，追加在接口功能里。<br>
 
 方法doc的描述（First Sentence）则显示为接口说明。
 各个doc tags 的顺序建议和示例保持一致。

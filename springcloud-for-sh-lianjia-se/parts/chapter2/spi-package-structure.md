@@ -1,6 +1,6 @@
 <!-- toc -->
 ### SPI包结构
-SPI由model、业务枚举以及接口组成，但我们必须考虑如何对接口功能进行**版本控制**。
+SPI由```model、业务枚举以及接口```组成，但我们必须考虑如何对接口功能进行```版本控制```。
 
 如果我们公开一个方法，那么客户端很可能基于此方法进行业务设计，这就意味着客户端隐式地和我们耦合在了一起。
 
@@ -28,18 +28,18 @@ com.lianjia.sh.loupan.spi
 ```
 
 #### 包前缀规范   
-首先，package前缀的规范: **com.lianjia.sh.项目名.功能模块名.spi**。也就是说，包前缀为SPI模块名。如果功能简单，则可以忽略功能模块。下面，我列举几个正确的包前缀：
+首先，package前缀的规范: `com.lianjia.sh.项目名.功能模块名.spi`。也就是说，包前缀为SPI模块名。如果功能简单，则可以忽略功能模块。下面，我列举几个正确的包前缀：
 
-*  com.lianjia.sh.loupan.search.spi
-*  com.lianjia.sh.loupan.core.spi
-*  com.lianjia.sh.loupan.statistics.spi
+*  `com.lianjia.sh.loupan.search.spi`
+*  `com.lianjia.sh.loupan.core.spi`
+*  `com.lianjia.sh.loupan.statistics.spi`
 
 #### 子包目录
-其次，按版本号分成几个sub package，比如，v1，v2。
+其次，按版本号分成几个sub package，比如，`v1`，`v2`。
 
 v1或v2由model（业务实体）、具体版本的SPI接口V1/V2.class（留给server实现） 组成。
 
-同时，与v1,v2包并列有source包（业务枚举）、业务码BizCode.class，以及不带版本号后缀的Spi.class，这是供客户端调用的。
+同时，与v1,v2包并列有source包（业务枚举）、`业务码BizCode.class`，以及不带版本号后缀的Spi.class，这是供客户端调用的。
 
 #### 包结构示例
 下面示例为loupan-search-spi 模块的包结构：
@@ -74,7 +74,7 @@ com.lianjia.sh.loupan.search.spi
 ```
 
 ### 接口和方法
-SPI 接口分两种，一种是给客户端调用的，和v1/v2等包平级，这些接口的后缀为”Spi”，是没有版本号的，比如CitySpi.class。另一种是server需要实现的、放在v1/v2包里的SPI接口，这些接口的后缀为：“Spi”+版本，比如CitySpiV1.class、CitySpiV2.class。
+SPI 接口分两种，一种是给`客户端调用`的，和v1/v2等包平级，这些接口的后缀为”Spi”，是没有版本号的，比如CitySpi.class。另一种是`server需要实现`的、放在v1/v2包里的SPI接口，这些接口的后缀为：“Spi”+版本，比如`CitySpiV1.class、CitySpiV2.class`。
 
 那么这两类接口有什么关系呢？下面代码演示了他们之间的关联：
 
@@ -127,7 +127,7 @@ public void doXXX(){
 
 我们采用了方案B，增加了一类供客户端调用的SPI，它仅仅把一组功能所有版本的SPI串了(extends)起来，并未声明什么新方法。
 
-对客户端来说，他现在不用关心某个功能到底在CitySpiV1里，还是在CitySpiV2里。他只要注入CitySpi，就能拿到所有版本支持的功能。
+对客户端来说，他现在不用关心某个功能到底在`CitySpiV1`里，还是在`CitySpiV2`里。他只要注入`CitySpi`，就能拿到所有版本支持的功能。
 
 但此种方案也有不足之处：
 
@@ -143,11 +143,11 @@ public void doXXX(){
 
 一般REST接口都会声明一系列业务错误码，这便于客户端定位问题。
 
-lorik-spi-view提供了标准业务码: ``` com.dooioo.se.lorik.spi.view.support.BizCode```
+lorik-spi-view提供了标准业务码:`com.dooioo.se.lorik.spi.view.support.BizCode`
 
-BizCode有个静态方法: BizCode.toCodes(BizCode...codes)将业务码转为字符串，可复制字符串到LorikRest(codes={“”})里，以生成API文档。
+BizCode有个静态方法: `BizCode.toCodes(BizCode...codes)`将业务码转为字符串，可复制字符串到`LorikRest(codes={“”})`里，以生成API文档。
 
-SPI业务码类的命名，推荐为：XXXBizCode，前缀一般为SPI模块名。
+SPI业务码类的命名，推荐为：`XXXBizCode`，前缀一般为SPI模块名。
 
 下面示例为mini楼盘的业务码：
 
@@ -186,7 +186,7 @@ public interface LoupanBizCode {
 
 ```
 
-业务码可在服务实现时配合com.dooioo.se.lorik.core.web.result.Assert抛出：
+业务码可在服务实现时配合`com.dooioo.se.lorik.core.web.result.Assert`抛出：
 
 ```
   

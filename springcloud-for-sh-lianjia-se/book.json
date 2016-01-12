@@ -6,7 +6,10 @@
 		"lorikCoreVersion": "1.1.0",
 		"lorikApidocletVersion": "1.0.0"
 	},
-	"plugins": ["atoc","mermaid","tbfed-pagefooter","mcqx","fbqx","expandable-chapters"],
+	"styles": {
+        "website": "styles/maxiang.css"
+    },
+	"plugins": ["atoc","tbfed-pagefooter","expandable-chapters"],
     "pluginsConfig": {
         "atoc": {
             "addClass": true,
