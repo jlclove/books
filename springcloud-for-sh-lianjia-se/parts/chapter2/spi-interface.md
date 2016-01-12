@@ -1,4 +1,5 @@
 <!-- toc -->
+
 ### SPI 接口规范 
 
 *  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。  
@@ -15,7 +16,7 @@
 * 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。  
 
 * 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```
- 
+### 代码示例
 下面示例为mini楼盘字典楼盘SPI的声明：
 
 ``` java
@@ -86,7 +87,8 @@ public interface ResblockSpiV1 {
 
 
 
-### 代码示例
+### loupan-spi模块  
+
 loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples/tree/master/springcloud-for-sh-lianjia-se/loupan-spi/src/main/java/com/lianjia/sh/samples/loupan/spi)，代码结构如下图所示：
  ![loupan-spi模块]({{book.imagePath}}/parts/chapter2/images/spi-code.png)
  

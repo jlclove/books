@@ -10,7 +10,7 @@ SPI由```model、业务枚举以及接口```组成，但我们必须考虑如何
 
 考虑到以上情况，我们SPI包结构如下：
 
-```
+``` java
 com.lianjia.sh.loupan.spi
      v1
      	  model
@@ -44,7 +44,7 @@ v1或v2由model（业务实体）、具体版本的SPI接口V1/V2.class（留给
 #### 包结构示例
 下面示例为loupan-search-spi 模块的包结构：
 
-```
+``` java
 com.lianjia.sh.loupan.search.spi
    	 v1
      	  model
@@ -105,7 +105,7 @@ SPI 接口分两种，一种是给`客户端调用`的，和v1/v2等包平级，
 
 方案A，客户端需要知晓每个版本的功能
 
-```
+``` java
 public void doXXX(){
        …some logic
        citySpiV1.xxxx();
@@ -116,7 +116,7 @@ public void doXXX(){
 
 方案B，是将所有版本的API串起来，只对客户端提供一个入口：
 
-```
+``` java
 public void doXXX(){
        …some logic
        citySpi.xxxxV1();

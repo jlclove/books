@@ -1,4 +1,5 @@
 <!-- toc -->
+
 ### Model 规范 
 
 *  所有Model必须实现```java.io.Serializable```, 推荐指明序列化版本号```serialVersionUID```，一般保持默认值即可。
