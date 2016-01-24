@@ -118,7 +118,7 @@ Feign 根据 ```Service SPI``` 接口的标注信息，构造符合Http协议的
 
 ``` java
 @FeignClient("city")
-//@FeignClient(url="http://localhost:8080")
+//@FeignClient(name="city",url="http://localhost:8080")
 public interface CitySpi{
     @RequestMapping(value="/v1/citys/{id}",method=RequestMethod.GET)
     City findByIdV1(@PathVariable(value="id")int id );
@@ -135,7 +135,7 @@ Feign 有一个接口 `feign.Contract`，用于完成Http请求的构造。Sprin
 
 此时，发起RPC请求之前需向```Eureka Server```查询该虚拟主机的所有节点，再由```Ribbon```选定一个节点。
 
-但我们也可以直接指定请求的url：`@FeignClient(url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/citys/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
+但我们也可以直接指定请求的url：`@FeignClient(name="city",url="http://localhost:8080")`，此时会被Feign理解为：向 URL = http://localhost:8080/v1/citys/{id}的主机发起一个Http **GET**请求。此时已无需Ribbon路由，通常在测试时才指定节点。
 
 Url的主机地址被动态解析和替换之后，Feign开始发送请求，最后对响应信息反序列化。
 

@@ -68,8 +68,14 @@
 java doc的说明文档请[参考这里](http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#tag)，大家可以了解下tags的顺序及其他说明。
 
 下面我演示一下标准SPI接口注释的写法：
-<pre><code class=“java”>
-public interface DistrictSpiV1{
+``` java
+/**
+ * 区域标准服务，区域指行政区划，比如上海市的静安区、黄埔区等。
+ * @summary 区域
+ * @Copyright (c) 2016, Lianjia Group All Rights Reserved.
+ */
+@FeignClient("loupan-server")
+public interface DistrictSpi{
 	/**
 	 * 根据区域ID查找区域，方法的详细说明
 	 * 说明，说明。
@@ -83,9 +89,12 @@ public interface DistrictSpiV1{
 	@LoginNeedless
 	@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})
 	@RequestMapping(value = "/v1/districts/{districtId}", method = RequestMethod.GET)
-	District  findDistrictV1(@PathVariable(value = "districtId") long districtId,@RequestParam(value=“userCode”,required=false,defaultValue=“8080”)Integer userCode);
+	District  findDistrictV1(
+	        @PathVariable(value = "districtId") long districtId,          
+	        @RequestParam(value=“userCode”,required=false,defaultValue=“8080”)  Integer userCode);
 }
-</code></pre>
+
+```
 
 上述java doc在API Gateway 将被展示为：
 
@@ -114,19 +123,19 @@ public interface DistrictSpiV1{
 比如：```@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})```，可理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
 非必须，如果方法实现会抛出业务错误码，则需显式在方法上声明。业务码对应接口文档的业务码说明。
 
-新增加了个doc tag: @summary。
+新增了个doc tag: @summary。
 
-*  ```@summary``` 将会被展示为接口方法的功能说明（一般不超过20字）
+*  ```@summary``` 即可用做接口方法的功能简介，也可用做SPI的功能简介（一般不超过20字）。
 
 
 其他doc tag说明如下：<br>
 ```@author``` tag既可以是负责人名，也可以是邮件地址或者产品线团队。<br>
 ```@param``` 我们用于显示方法参数的说明。<br>
 Spring MVC的标注将会被正确解释为符合Http 语义的说明，比如路径参数，请求参数。<br>
-```@version``` REST接口版本号 。<br>
+```@version``` REST接口的版本号 。<br>
 ```@since``` 接口开发或发布日期，比如：2016-01-01，追加在接口功能里。<br>
 
-方法doc的描述（First Sentence）则显示为接口说明。
+方法的描述（doc 注释的第一行）则显示为接口说明。
 各个doc tags 的顺序建议和示例保持一致。
 
 

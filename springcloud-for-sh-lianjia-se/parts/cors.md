@@ -137,17 +137,26 @@ $.ajax({
  CORS是**C**ross-**O**rigin **R**esource **S**haring的简称。CORS规范定义了一系列 Request Header和Response Header，浏览器和服务端程序根据Request/Response Header做出不同的行为。
  
 #### CORS Request Header
-* Origin
-* Access-Control-Request-Method
-* Access-Control-Request-Headers  
+* Origin  
+   客户端域名
+* Access-Control-Request-Method  
+   客户端发起跨域请求所用的Http Method
+* Access-Control-Request-Headers   
+   客户端发起跨域请求时携带的Header
 
 #### CORS Response Header
-* Access-Control-Allow-Origin
-* Access-Control-Allow-Credentials
-* Access-Control-Expose-Headers
-* Access-Control-Max-Age
-* Access-Control-Allow-Methods
-* Access-Control-Allow-Headers
+* Access-Control-Allow-Origin  
+   资源提供方允许跨域访问的主机域名，如果不限，则返回*，否则返回具体的域名。
+* Access-Control-Allow-Credentials  
+   是否允许客户端携带cookie、发送SSL握手以及Http认证数据等。
+* Access-Control-Expose-Headers  
+   暴露给客户端、客户端跨域可读取的Response Header
+* Access-Control-Max-Age  
+    预校验请求的缓存时间，单位为妙。
+* Access-Control-Allow-Methods  
+    允许客户端使用那些Http Method跨域访问当前资源，换句话说，资源支持那些Http Method，多个以逗号隔开，比如： GET,POST,OPTION。
+* Access-Control-Allow-Headers  
+   资源提供方允许客户端携带那些请求头访问资源。
 
 #### CORS 请求流程
 

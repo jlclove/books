@@ -2,6 +2,8 @@
 
 `Spring Cloud`为了简化项目版本依赖的管理，提供了一系列构建类型为pom的starter项目。我们的项目只需要指定其Parent为`spring-cloud-starter-parent`，就可以继承spring-cloud-starter-parent的依赖管理、常用Maven插件等，这样子模块就可以导入依赖包，而无需关心其版本号，也不必重复配置Maven插件。
 
+另外，我们也可以使用Maven的依赖管理集中配置自己项目的Jar版本号。
+
 **我们采用的Spring Cloud 版本为：Brixton.M4**
 
 ``` xml
@@ -15,30 +17,59 @@
 最终，Maven Parent项目的pom.xml如下：
 
 ```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-  <!--我们项目的父级为  Spring Cloud ， 版本为：Brixton.M4  -->
-  <parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--我们项目的父级为 Spring Cloud ， 版本为：Brixton.M4 ，也可以不指定父级-->
+	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
 		<version>Brixton.M4</version>
 	</parent>
-	
-  <groupId>com.lianjia.sh.samples.loupan</groupId>
-  <artifactId>loupan</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>loupan</name>
-  <description>Spring Cloud Sample for SE@sh.lianjia.com</description>
-  
-  <properties>
+
+	<groupId>com.lianjia.sh.samples.loupan</groupId>
+	<artifactId>loupan</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>loupan</name>
+	<description>Spring Cloud Sample for SE@sh.lianjia.com</description>
+
+	<properties>
 		<!--覆盖Spring提供的1.6，指定了项目编译后的class版本 -->
 		<java.version>1.8</java.version>
- </properties>
- 
-   <!-- 为防止某些jar包无法下载，我们指定仓库地址 -->
-  <repositories>
+		<!-- maven javadoc -->
+		<javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+		<!-- lorik spi view版本号 -->
+		<lorik.spiview.version>2.1.2-SNAPSHOT</lorik.spiview.version>
+		<!-- lorik core版本号 -->
+		<lorik.core.version>1.1.1-SNAPSHOT</lorik.core.version>
+	</properties>
+
+    <!-- 项目依赖管理，版本号集中配置 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.dooioo.se.lorik</groupId>
+				<artifactId>lorik-core</artifactId>
+				<version>${lorik.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dooioo.se.lorik</groupId>
+				<artifactId>lorik-spi-view</artifactId>
+				<version>${lorik.spiview.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>loupan-server</module>
+		<module>loupan-spi</module>
+		<module>loupan-ui</module>
+	</modules>
+
+	<!-- 为防止某些jar包无法下载，我们指定仓库地址 -->
+	<repositories>
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
@@ -48,14 +79,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-  
-  <modules>
-  	<module>loupan-server</module>
-  	<module>loupan-spi</module>
-  	<module>loupan-ui</module>
-  </modules>
 </project>
-
 ```
 
 

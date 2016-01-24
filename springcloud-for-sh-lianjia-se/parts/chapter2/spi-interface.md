@@ -2,7 +2,7 @@
 
 ### SPI 接口规范 
 
-*  Server实现的接口命名必须以“Spi”+版本号为后缀，比如：ResblockSpiV1，供客户端调用的SPI接口以“Spi”为后缀，比如：ResblockSpi。  
+*  接口类名必须以“Spi”为后缀，比如：`ResblockSpi`，接口不允许有父接口。  
 
 * ```RequestMapping``` 只能添加在方法上，不能添加在接口上。  
   RequestMapping的value以版本号为前缀(“/version/path”)，method必须提供并且只能限定为一种，比如：  
@@ -13,24 +13,33 @@
 * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
 
 
-* 接口方法必须提供完善且符合要求的注释，以便自动生成API网关里的文档。  
+* 接口方法必须提供完善且符合要求的注释，以便自动生成API文档。  
 
-* 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```
+* 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```  
+
+* SPI接口最好生成Java Doc注释，推荐添加@summary，一般是此SPI的简介。
 ### 代码示例
 下面示例为mini楼盘字典楼盘SPI的声明：
 
 ``` java
-package com.lianjia.sh.samples.loupan.spi.v1;
+package com.lianjia.sh.samples.loupan.spi;
+//省略spring mvc annotation
+import com.dooioo.se.lorik.spi.view.Pagination;
+import com.dooioo.se.lorik.spi.view.authorize.LoginNeedless;
+import com.dooioo.se.lorik.spi.view.support.LorikRest;
+import com.dooioo.se.lorik.spi.view.support.LorikRest.Feature;
+import com.lianjia.sh.samples.loupan.spi.model.Resblock;
+
 /**
- * 楼盘SPIV1
- * @author huisman
- * @since v1
+ * 楼盘SPI,楼盘是从北京链家同步过来的，目前仅支持苏州、上海的楼盘查询。
+ * @summary 楼盘
  * @Copyright (c) 2016, Lianjia Group All Rights Reserved.
  */
-public interface ResblockSpiV1 {
+@FeignClient("loupan-server")
+public interface ResblockSpi {
 
   /**
-   *  根据城市国标码对楼盘搜索，可根据区域ID、商圈ID分页检索楼盘。
+   * 根据城市国标码对楼盘搜索，可根据区域ID、商圈ID分页检索楼盘。
    * 
    * @author huisman
    * @version v1
@@ -39,7 +48,7 @@ public interface ResblockSpiV1 {
    * @param districtId 行政区域ID
    * @param pageSize 分页大小
    * @param pageNo 当前页码
-   * @return 
+   * @return
    * @since 2016-01-01
    * @summary 根据gbCode分页检索楼盘
    */
@@ -50,28 +59,44 @@ public interface ResblockSpiV1 {
       @RequestParam(value = "bizcircleId", required = false) Integer bizcircleId,
       @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
       @RequestParam(value = "pageSize", defaultValue = "30") int pageSize);
-}
- 
-```
 
-### 方法注释规范
-
-``` java
   /**
-  * 方法详细说明
-  * @author 作者名或者产品线，邮件等
-  * @version v1 || v2， 版本号，小写。
-  * @param 参数名  参数说明
-  * @param 参数名  参数说明
-  * @param 参数名  参数说明
-  * @return 返回结果的说明
-  * @since 方法实现或上线日期，比如 2016-01-01。
-  * @summary 功能概括，一般不超过20字
-  */
-  
+   * 根据城市国标码以及楼盘关键字信息自动提示楼盘信息，最多返回 size（默认20）条数据。
+   * 
+   * @author huisman
+   * @version v1
+   * @param keyword 楼盘关键字
+   * @param gbCode 城市国标码
+   * @param size 返回的结果数，默认20
+   * @return 不存在则返回空List
+   * @since 2016-01-01
+   * @summary 楼盘自动提示
+   */
+  @LoginNeedless
+  @RequestMapping(value = "/v1/resblocks/autoSearch", method = RequestMethod.GET)
+  List<Resblock> autoSearchV1(@RequestParam(value = "keyword", defaultValue = "") String keyword,
+      @RequestParam(value = "gbCode") int gbCode,
+      @RequestParam(value = "size", defaultValue = "20") int size);
+
+  /**
+   * 根据楼盘ID查找楼盘
+   * @author huisman
+   * @version v1
+   * @param id 楼盘ID
+   * @return
+   * @since 2016-01-01
+   * @summary 根据ID查找楼盘
+   */
+  @LoginNeedless
+  @LorikRest(value = {Feature.NullTo404}, codes = {"23000:楼盘不存在","22000:商圈不存在"})
+  @RequestMapping(value = "/v1/resblocks/{id}", method = RequestMethod.GET)
+  Resblock findByIdV1(@PathVariable(value = "id") int id);
+}
+
 ```
 
-上述方法注释的模板可以在IDE中配置，以下是Eclipse Code Comment配置：
+### 注释模板
+SPI方法的注释模板可在IDE中配置，以下是Eclipse Code Comment配置：
 
 ``` java
 /**
@@ -81,6 +106,17 @@ public interface ResblockSpiV1 {
   * ${tags}
   * @since ${date}
   * @summary 
+  */
+```
+
+SPI类的Eclipse注释模板：
+
+``` java
+/**
+  *
+  * @summary 
+  * @since ${date}
+  * @Copyright (c) {year}, Lianjia Group All Rights Reserved.
   */
 
 ```
@@ -94,19 +130,19 @@ loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples
  
  
  
-还有一点需要注意：供客户端调用的SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的```spring.application.name```，一般是实现方模块名，代码示例如下：
+还有一点需要注意：SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的```spring.application.name```，一般是实现方模块名，代码示例如下：
 
 ``` java
 @FeignClient("loupan-core-server")
-public interface BizcircleSpi extends BizcircleSpiV1 {
+public interface BizcircleSpi {
 }
 
 @FeignClient("loupan-statistics-server")
-public interface CitySpi extends SomeSpiV1,SomeSpiV2 {
+public interface CitySpi{
 }
 
 @FeignClient("loupan—search-server")
-public interface BizcircleSpi extends SomeSpiV1,SomeSpiV2,SomeSpiV3 {
+public interface BizcircleSpi{
 }
 
 ```

@@ -8,7 +8,9 @@
 
 * 所有Model字段的```Getter```方法须提供注释，如果是枚举值、或状态值，须明确列举各个状态的相应说明，但```Setter```不做要求。   
  
-* 所有Model必须提供默认构造函数。
+* 所有Model必须提供默认构造函数。  
+
+* 注释推荐使用Java doc，尽可能`不使用 //`。 
 
 为了简化model的编码工作，特别是大量字段的model，我们之后将提供根据数据库表（建表时要给列添加注释）自动生成SPI model，自动生成注释，使之符合以上规范。
 
@@ -16,48 +18,85 @@
 下面示例为mini楼盘字典实体楼盘（resblock)的model:
 
 ``` java
-package com.lianjia.sh.samples.loupan.spi.v1.model;
+package com.lianjia.sh.samples.loupan.spi.model;
+
+import java.io.Serializable;
+
 /**
  * 楼盘
  * @author huisman
- * @since v1
  * @Copyright (c) 2015, Lianjia Group All Rights Reserved.
  */
 public class Resblock implements Serializable {
   private static final long serialVersionUID = 1L;
-  // 编号
+  /**
+   *编号
+   */
   private Long id;
-  // 城区编号
+  /**
+   *城区编号
+   */
   private Integer districtId;
-  // 商圈编号
+  /**
+   *城区编号
+   */
   private Integer bizcircleId;
-  // 一级社区
+
+  /**
+   *一级社区
+   */
   private String primaryCommunity;
-  // 二级社区
+  /**
+   *二级社区
+   */
   private String secondCommunity;
-  // 名称
+  /**
+   *名称
+   */
   private String name;
-  // 别名
+  /**
+   * 楼盘别名
+   */
   private String alias;
-  // 简拼
+  /**
+   *简拼
+   */
   private String simpleSpell;
-  // 全拼
+  /**
+   *全拼
+   */
   private String fullSpell;
-  // 行政地址
+  /**
+   *行政地址
+   */
   private String adminAddr;
-  // 产权地址
+  /**
+   *产权地址
+   */
   private String propAddr;
-  // 绿化面积
+  /**
+   *绿化面积
+   */
   private float greenArea;
-  // 绿化率
+  /**
+   *绿化率
+   */
   private float greenRate;
-  // 容积率
+  /**
+   *容积率
+   */
   private float cubageRate;
-  // 中心点经度
+  /**
+   *中心点经度
+   */
   private double pointLng;
-  // 中心点纬度
+  /**
+   *中心点纬度
+   */
   private double pointLat;
-  // 城市编号
+  /**
+   *城市编号
+   */
   private Integer gbCode;
 
   public Resblock() {
@@ -76,7 +115,6 @@ public class Resblock implements Serializable {
   }
 
   /**
-   * 
    * @return 楼盘所属区域
    */
   public Integer getDistrictId() {

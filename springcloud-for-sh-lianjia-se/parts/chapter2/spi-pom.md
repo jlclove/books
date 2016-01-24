@@ -9,6 +9,8 @@ SPI模块只需引入三个jar：
  我们内部对spi层的支持，包括登录校验、分页、Model的视图支持、支持Spring MVC 标注（@RequestParam，@Pathvariable,@RequestHeader)的继承等。  
 必须显式依赖特定版本号，**目前版本号为{{ book.lorikSpiViewVersion }}**。
 
+另外，推荐指定pom.xml的name，一般为SPI模块的中文名。
+
 pom.xml如下：
 
 ```xml
@@ -23,6 +25,7 @@ pom.xml如下：
   <artifactId>loupan-spi</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0</version>
+  <name>楼盘字典</name>
   
   <dependencies>
       <dependency>
@@ -38,7 +41,6 @@ pom.xml如下：
 		<dependency>
          	<groupId>com.dooioo.se.lorik</groupId>
 		    <artifactId>lorik-spi-view</artifactId>
-		    <version>version</version>
         </dependency>
    </dependencies>
 </project>
