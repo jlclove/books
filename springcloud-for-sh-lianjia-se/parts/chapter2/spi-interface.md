@@ -8,7 +8,7 @@
   RequestMapping的value以版本号为前缀(“/version/path”)，method必须提供并且只能限定为一种，比如：  
 ```@RequestMapping(value = "/v1/resblocks", method = RequestMethod.GET）```  
   
-* 接口方法的名称必须以版本号为后缀，比如：```searchV1（）```，```findByIdV1()```;  
+* 接口方法的名称必须以版本号为后缀，比如：```searchV1（）```，```findByIdV2()```;  
 
 * 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
 
