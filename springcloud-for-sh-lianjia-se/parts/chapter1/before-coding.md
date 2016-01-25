@@ -111,7 +111,7 @@ public interface DistrictSpi{
 | 返回值| model District json输出 |
 | author|huisman|
 
-新增了两个用在方法上的Annotation：
+新增了两个用在方法上的注解：
 
 *    ```@LoginNeedless```   
 
@@ -125,7 +125,7 @@ public interface DistrictSpi{
 
 新增了个doc tag: @summary。
 
-*  ```@summary``` 即可用做接口方法的功能简介，也可用做SPI的功能简介（一般不超过20字）。
+*  ```@summary``` 即可用做接口方法的功能简介，也可用做SPI 类的功能简介（一般不超过20字）。
 
 
 其他doc tag说明如下：<br>

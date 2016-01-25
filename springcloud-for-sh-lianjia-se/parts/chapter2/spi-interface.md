@@ -10,12 +10,12 @@
   
 * 接口方法的名称必须以版本号为后缀，比如：```searchV1（）```，```findByIdV2()```;  
 
-* 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须使用```@RequestParam```、```@PathVariable```、```@RequestHeader```标注。  
+* 接口方法的参数，只能是8种基本类型以及枚举值，可变参数仅限枚举类型，并且方法的参数必须添加注解```@RequestParam```、```@PathVariable```、```@RequestHeader```。  
 
 
 * 接口方法必须提供完善且符合要求的注释，以便自动生成API文档。  
 
-* 接口方法默认会进行登录校验，如果无需登录即可访问，请添加标注```@LoginNeedless```  
+* 接口方法默认会进行登录校验，如果无需登录即可访问，请添加注解```@LoginNeedless```  
 
 * SPI接口最好生成Java Doc注释，推荐添加@summary，一般是此SPI的简介。
 ### 代码示例
@@ -130,7 +130,7 @@ loupan-spi模块代码： [GitHub loupan-spi](https://github.com/bookdao/samples
  
  
  
-还有一点需要注意：SPI接口要使用```@FeignClient(“server name”)```标注，server name是接口实现方的```spring.application.name```，一般是实现方模块名，代码示例如下：
+还有一点需要注意：SPI接口要添加注解```@FeignClient(“server name”)```，server name是接口实现方的```spring.application.name```，一般是实现方模块名，代码示例如下：
 
 ``` java
 @FeignClient("loupan-core-server")

@@ -1,12 +1,13 @@
 ## Spring Java Config
+%E5%BE%B3%E4%BD%91 、%E5%BE%B7%E4%BD%91
 
-Spring Framework 3.0版本之后，提供了基于Java代码的方式配置Bean (以下统称Java Config)。
+Spring 3.0之后，提供了基于Java代码的方式配置Bean (以下统称Java Config)。
 
 Java Config支持:
- * 类上添加标注`org.springframework.context.annotation.Configuration`，`@Configuration`标注指明此类主要用于配置Spring Bean，就好比 `@Service`标注某个类是服务。 
- * 方法上添加标注`org.springframework.context.annotation.Bean`，`@Bean`表明此方法将被Spring用于实例化一个Bean，可以看成，我们手动new了一个对象，然后自动安装到Spring 容器里。
+ * 类上添加注解`org.springframework.context.annotation.Configuration`，`@Configuration`标注指明此类主要用于配置Spring Bean，就好比 `@Service`标注某个类是服务。 
+ * 方法上添加注解`org.springframework.context.annotation.Bean`，`@Bean`表明此方法将被Spring用于实例化一个Bean，可以看成，我们手动new了一个对象，然后自动安装到Spring 容器里。
 
-比如以下代码：
+以下代码：
 
 ``` java
 @Configuration
@@ -30,7 +31,6 @@ public class AppConfig {
 
 简单来说，以前在Spring applicationContext.xml里配置的任何语义都可以使用Java代码来表达。
 
-接下来我一一列举，一些常见的写法：
 
 #### 完整示例
 ``` java
@@ -45,19 +45,21 @@ public class AppConfig {
   @DependsOn(value={"otherBeanName"})
   @Primary
   @Lazy
-  public DataSource data(){
+  public DataSource dataSource(){
      return DataSourceBuilder.create().build();
   }
 ```
 
-* name Bean的名称，默认是方法名，我们可以指定一个或多个（别名）。
-* initMethod 指定初始化时回调方法。 
-		类似： Bean bean=new Bean;  
-			  bean.init();
-* destroyMethod 指定Bean销毁时回调方法。
-* autowire Spring自动注入的方式，默认Autowire.No，取决容器实现。
-* @DependsOn 依赖的Bean的name
-* @Primary 如果自动注入时有多个候选Bean（有歧义时），会优先选择@Primary标注的
-* @Lazy 延迟加载
+|  属性  | 说明 | 默认值 |
+| :------------ | :-----------| :----------- | 
+|name| Bean的名称，我们可以指定一个或多个（别名） | 方法名|
+| initMethod| Bean实例化时回调方法，等同于：<br>`Bean bean=new Bean(…); bean.init();`| 无|
+| destroyMethod| Bean销毁时回调方法 |public的close/shutdown方法，设置为“”可禁用默认值|
+| autowire| Spring IOC自动注入的方式:ByName/ByType|Autowire.No|
+|@Scope| Bean的作用域，Spring内置支持：prototype、singleton |singleton|
+| @DependsOn | Bean依赖的Bean的名称，可有多个值|无|
+| @Primary| 如果自动注入时有多个候选Bean（有歧义时），会优先选择有@Primary注解的     |无|
+| @Lazy| 指明此Bean在其他Bean第一次访问时初始化，所谓延迟加载     |Spring BeanFactory启动时实例化所有单例Bean|
+
 
 

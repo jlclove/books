@@ -122,9 +122,9 @@ public interface CitySpi{
 
 简单来说，SPI调用方就是一个`Http Client`，它调用SPI接口，背后其实是对提供方（Server）发起HTTP请求以获取数据。 所以 `CitySpi`的每个方法必须提供必要的元数据信息以便Feign客户端（SPI调用方）能够构造正确的Http请求。
 
-Feign定义了接口：```Contract```，用于解析SPI接口方法的元数据（方法或类上的Annotation），从而构造合适的HTTP请求。  
+Feign定义了接口：```Contract```，用于解析SPI接口方法的元数据（方法或类上的注解），从而构造合适的HTTP请求。  
 
-Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spring MVC标注 `@RequestMapping`、`@PathVariable`、`@RequestParam`、`@RequestHeader` 给接口方法添加元数据。
+Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spring MVC注解 `@RequestMapping`、`@PathVariable`、`@RequestParam`、`@RequestHeader` 给接口方法添加元数据。
 
 #### Spring MVC用法上的限制
 但是请注意，Spring Cloud目前仅支持 `@RequestMapping`、`@PathVariable`、`@RequestParam`、`@RequestHeader`，而且用法上有一点限制。
@@ -170,8 +170,8 @@ Spring Cloud的```SpringMvcContract```实现了```Contract```，支持使用Spri
   @RequestHeader("cuser",required=true) int cuser,...);
 ```
 
-#### Spring MVC标注后的SPI
-为了配合Neflix Feign以`HTTP+JSON`这种方式进行RPC调用，我们必须给方法添加合适的Spring MVC标注。`Request Mapping`的url最好符合REST规范，以版本号开头，比如"v1"，大家可以参考第一章：
+#### 添加Spring MVC注解后的SPI
+为了配合Neflix Feign以`HTTP+JSON`这种方式进行RPC调用，我们必须给方法添加合适的Spring MVC注解。`Request Mapping`的url最好符合REST规范，以版本号开头，比如"v1"，大家可以参考第一章：
 [扩展：REST API最佳实践](../restful-api-v1.4.html)。
 
 更新后的代码如下：
@@ -248,9 +248,9 @@ public interface CitySpi{
 
 ### 最终版：考虑到接口安全性以及REST访问时的SPI
 最后，我们检查各个接口，看那些方法需要登录校验，那些方法可以公开访问：
-* `existsV1`，`findAllV1`，`findByGbCodeV1`可以公开访问（REST 或者FeignClient），因为不是敏感数据，所以无需登录校验，我们手动添加`@LoginNeedless`；由于`findAllV1`，`findByGbCodeV1`支持REST访问，而响应可能为`null`，我们添加标注`@LorikRest`，启用特性`Feature.NullTo404`（REST访问时返回null则响应404）。  
+* `existsV1`，`findAllV1`，`findByGbCodeV1`可以公开访问（REST 或者FeignClient），因为不是敏感数据，所以无需登录校验，我们手动添加`@LoginNeedless`；由于`findAllV1`，`findByGbCodeV1`支持REST访问，而响应可能为`null`，我们添加注解`@LorikRest`，启用特性`Feature.NullTo404`（REST访问时返回null则响应404）。  
 另外，`existsV1`方法实现时有业务码抛出，所以用`LorikRest`的属性`codes`枚举出来以便生成API文档。  
-如果方法不支持REST方式访问，可不加此标注。  
+如果方法不支持REST方式访问，可不加此注解。  
 
 * `addV1`新增数据，肯定需要登录校验的，默认情况下，接口方法都会进行登录校验。  
 一般记录创建人就是当前系统登录的用户，所以我们要把 `@RequestParam(value="cuser”)`换成 `@RequestHeader(StandardHttpHeaders.X_Login_UserCode)int cuser)`。  
