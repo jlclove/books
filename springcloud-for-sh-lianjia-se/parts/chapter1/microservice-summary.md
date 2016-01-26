@@ -4,9 +4,9 @@
 
 站在工程师的角度看，微服务涉及三种角色：
 
-* Service SPI [^1]   服务契约
-* Service Provider 服务实现方，即 Service SPI Implementation
-* Client 服务调用方，即 SPI 依赖方
+* Service SPI [^1]   服务契约，一般称之为：SPI
+* Service Provider 服务实现方，一般称之为Server
+* Client 服务调用方，即 SPI 依赖方，一般称之为UI/Client
 
 服务提供方公布一系列接口（```SPI```），使用Maven构建成jar包，同时，另起一个项目实现SPI（```Service Provider```)。
 

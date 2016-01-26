@@ -53,13 +53,18 @@ public class AppConfig {
 |  属性  | 说明 | 默认值 |
 | :------------ | :-----------| :----------- | 
 |name| Bean的名称，我们可以指定一个或多个（别名） | 方法名|
-| initMethod| Bean实例化时回调方法，等同于：<br>`Bean bean=new Bean(…); bean.init();`| 无|
-| destroyMethod| Bean销毁时回调方法 |public的close/shutdown方法，设置为“”可禁用默认值|
+| initMethod| Bean实例化时的回调方法，等同于：<br>`Bean bean=new Bean(…); bean.init();`| 无|
+| destroyMethod| Bean销毁时的回调方法 |public的close/shutdown方法，设置为空字符串(“”)可禁用默认值|
 | autowire| Spring IOC自动注入的方式:ByName/ByType|Autowire.No|
 |@Scope| Bean的作用域，Spring内置支持：prototype、singleton |singleton|
 | @DependsOn | Bean依赖的Bean的名称，可有多个值|无|
 | @Primary| 如果自动注入时有多个候选Bean（有歧义时），会优先选择有@Primary注解的     |无|
 | @Lazy| 指明此Bean在其他Bean第一次访问时初始化，所谓延迟加载     |Spring BeanFactory启动时实例化所有单例Bean|
+
+#### 依赖注入
+
+
+
 
 
 
