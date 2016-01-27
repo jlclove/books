@@ -1,7 +1,7 @@
 {
 	"title": "微服务实战（上海链家）",
 	"variables": {
-	    "imagePath": "/",
+	    "imagePath": "../..",
 		"lorikSpiViewVersion": "2.1.2-SNAPSHOT",
 		"lorikCoreVersion": "1.1.1-SNAPSHOT",
 		"lorikApidocletVersion": "1.0.0"
