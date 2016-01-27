@@ -87,7 +87,7 @@ public interface DistrictSpi{
 	 * @summary 根据ID查找区域 
 	 */
 	@LoginNeedless
-	@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})
+	@LorikRest(value={Feature.NullTo404},codes={20010,20020})
 	@RequestMapping(value = "/v1/districts/{districtId}", method = RequestMethod.GET)
 	District  findDistrictV1(
 	        @PathVariable(value = "districtId") long districtId,          
@@ -120,7 +120,7 @@ public interface DistrictSpi{
 *   ```@LorikRest```     
 
 	可以配置此方法通过API网关（api.route.dooioo.org)访问时的一些REST特性和业务码。  
-比如：```@LorikRest(value={Feature.NullTo404},codes={"20010:区域已删除","20020:区域不存在"})```，可理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
+比如：```@LorikRest(value={Feature.NullTo404},codes={20010,20020})```，可理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
 非必须，如果方法实现会抛出业务错误码，则需显式在方法上声明。业务码对应接口文档的业务码说明。
 
 新增了个doc tag: @summary。

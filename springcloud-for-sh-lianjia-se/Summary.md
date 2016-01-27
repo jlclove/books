@@ -20,6 +20,7 @@ bui #Summary
 	* [从0开始编写SPI](parts/chapter2/from-zero.md)
 	* [2·3·3](parts/chapter2/2-3-3.md)
 	* [接口安全性](parts/chapter2/spi-security.md)
+	* [API文档自动生成](parts/chapter2/doc-auto.md)
 * [SPI 实现： Server](parts/chapter3/server-pom.md)
 	* [Spring Java Config](parts/chapter3/java-config.md)
 	

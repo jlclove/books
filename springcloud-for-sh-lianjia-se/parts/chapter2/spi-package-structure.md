@@ -1,6 +1,6 @@
 <!-- toc -->
 ### SPI包结构
-SPI由```model、业务枚举以及接口```组成，但我们必须考虑如何对接口功能进行```版本控制```。
+SPI由```model、业务码、枚举以及接口```组成，但我们必须考虑如何对接口功能进行```版本控制```。
 
 如果我们公开一个方法，那么客户端很可能基于此方法进行业务设计，这就意味着客户端隐式地和我们耦合在了一起。
 
@@ -31,7 +31,7 @@ com.lianjia.sh.loupan.spi
 *  `com.lianjia.sh.loupan.statistics.spi`
 
 #### 子包目录
-子包目录有model、业务枚举包、其他等。
+子包目录有model、枚举包、其他等。
 
 所有的SPI接口和业务码属于`com.lianjia.sh.项目名.功能模块名.spi`包，和model等子包层级并列。
 
@@ -62,9 +62,31 @@ com.lianjia.sh.loupan.search.spi
 
 一般REST接口都会声明一系列业务错误码，这便于客户端定位问题。
 
-lorik-spi-view提供了标准业务码:`com.dooioo.se.lorik.spi.view.support.BizCode`
+lorik-spi-view提供了标准业务码:`com.dooioo.se.lorik.spi.view.support.BizCode`，推荐集中声明在接口中（**如果业务码字段不是public&& static ，自动生成文档时将忽略**）。
 
-BizCode有个静态方法: `BizCode.toCodes(BizCode...codes)`将业务码转为字符串，可复制字符串到`LorikRest(codes={“”})`里，以生成API文档。
+注意：code值在`900000-1000000`之间的业务码是API网关及通用框架抛出的错误。
+
+BizCode有个静态方法: `BizCode.toCodes(BizCode...codes)`将多个业务码合并成以逗号隔开的字符串，可复制到`LorikRest(codes={code1,code2,…})`里，以声明此方法可能抛出的业务码值，此处的codes为int型数组，是BizCode的code值，也可以声明为int型静态常量，示例如下：
+
+``` java
+ //code常量
+ public interface Codes{
+        int CITY_NOT_EXISTS=210000;
+         …..
+ }
+ 
+//业务码集中声明
+public interface XXXBizCode{
+	BizCode CITY_NOT_EXISTS=new BizCode(Codes.CITY_NOT_EXISTS, "城市不存在");
+		…
+}
+     
+//SPI的方法，一个微服务可能有很多业务码，但我们可声明当前方法抛出的业务码
+@LorikRest(value={Feature.NullTo404},
+	codes={Codes.CITY_NOT_EXISTS})
+    @RequestMapping(value=“/v1/citys/{gbCode}”,method=RequstMethod.GET)
+    public City findByIdV1(@PathVariable(value=“gbCode”)int gbCode);
+```
 
 SPI业务码类的命名，推荐为：`XXXBizCode`，前缀一般为SPI模块名。
 

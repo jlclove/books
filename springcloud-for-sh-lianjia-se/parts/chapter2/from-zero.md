@@ -277,7 +277,7 @@ public interface CitySpi{
      * @summary 根据国标码检测城市是否存在
      */
      @LoginNeedless
-     @LorikRest(codes={"20100:城市已停用","20101:城市已删除"})
+     @LorikRest(codes={20100,20101})
      @RequestMapping(value="/v1/citys/{gbCode}/exists",method=RequestMethod.GET)
      boolean existsV1(@PathVariable(value="gbCode")int gbCode);
      
