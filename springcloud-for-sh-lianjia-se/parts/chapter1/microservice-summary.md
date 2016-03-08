@@ -62,7 +62,7 @@
 
 针对以上需求，Spring团队整合了一种解决方案：Spring Cloud + Netflix OSS。
 
-####服务发现 - Eureka
+#### 服务发现 - Eureka
 [Netflix Eureka 1.X.X](https://github.com/Netflix/eureka/wiki "Eureka Wiki") 使用了一种简单机制实现了节点的自动注册和发现。
 
 Eureka 有两种角色：```Eureka Client``` 和 ```Eureka Server```。通常我们的Spring Cloud 程序都是作为```Eureka Client```启动的。 
