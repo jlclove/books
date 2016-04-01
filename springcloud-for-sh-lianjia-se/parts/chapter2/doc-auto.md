@@ -1,31 +1,25 @@
 <!-- toc -->
 ## SPI自动生成API文档
 ### 插件配置
-API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块）仅需配置Maven javadoc插件：
+API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块）仅需配置apidoc插件：
 ```xml
-<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <doclet>com.dooioo.se.lorik.apidoclet.ApiDoclet</doclet>
-
-          <docletArtifact>
-            <groupId>com.dooioo.se.lorik</groupId>
-            <artifactId>lorik-apidoclet</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-          </docletArtifact>
-          <additionalparam>-classdir "${project.build.outputDirectory}" -appName "${project.name}"</additionalparam>
-          <useStandardDocletOptions>false</useStandardDocletOptions>
-        </configuration>
- </plugin>
+		<plugin>
+				<groupId>com.dooioo.se.lorik</groupId>
+				<artifactId>maven-apidoc-plugin</artifactId>
+				<version>1.0.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<options>-appName "${project.name}"</options>
+				</configuration>
+		</plugin>
 ```
 
 该插件需配置参数：
   -appName “微服务的中文名称”
   
-然后运行Maven javadoc命令： `mvn javadoc:javadoc` 即可。
+然后运行Maven 命令： `mvn apidoc` 即可。
 
-源代码的解析是由lorik-apidoclet-1.0.0-SNAPSHOT.jar负责的，解析后的数据自动导入到：[http://api.doc.dooioo.org](http://api.doc.dooioo.org)。
+源代码的解析是由lorik-apidoclet-1.0.1.jar负责的，解析后的数据自动导入到：[http://api.doc.dooioo.org](http://api.doc.dooioo.org)。
 
 ### 要求
 唯一要求是源代码的注释必须符合我们的要求：
@@ -89,19 +83,14 @@ public interface HouseRegisterApplySpi {
 ### 额外配置
 由于普通的SpringMVC项目没有虚拟主机地址（一般为英文，可以使用’-’分隔），所以插件需额外配置一个参数：-app “you-app”，这个值一般是配置在API网关的静态路由的path。
 ``` xml
-<plugin>
-   <groupId>org.apache.maven.plugins</groupId>
-   <artifactId>maven-javadoc-plugin</artifactId>
-	  <configuration>
-		<doclet>com.dooioo.se.lorik.apidoclet.ApiDoclet</doclet>
 
-		<docletArtifact>
-		    <groupId>com.dooioo.se.lorik</groupId>
-			<artifactId>lorik-apidoclet</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</docletArtifact>
-	   <additionalparam>-classdir "${project.build.outputDirectory}" -app "you-app” -appName "${project.name}"</additionalparam>
-	   <useStandardDocletOptions>false</useStandardDocletOptions>
-	 </configuration>
-</plugin>
+	<plugin>
+		 <groupId>com.dooioo.se.lorik</groupId>
+		 <artifactId>maven-apidoc-plugin</artifactId>
+		 <version>1.0.0</version>
+		 <extensions>true</extensions>
+		 <configuration>
+			<options>-app "you-app” -appName "${project.name}"</options>
+		</configuration>
+	</plugin>
 ```
