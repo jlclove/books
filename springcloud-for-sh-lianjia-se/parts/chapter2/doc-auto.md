@@ -6,7 +6,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 		<plugin>
 				<groupId>com.dooioo.se.lorik</groupId>
 				<artifactId>maven-apidoc-plugin</artifactId>
-				<version>1.0.0</version>
+				<version>1.0.2</version>
 				<extensions>true</extensions>
 				<configuration>
 					<options>-appName "${project.name}"</options>
@@ -21,8 +21,29 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 
 源代码的解析是由lorik-apidoclet-1.0.1.jar负责的，解析后的数据自动导入到：[http://api.doc.dooioo.org](http://api.doc.dooioo.org)。
 
-### 要求
-唯一要求是源代码的注释必须符合我们的要求：
+### 注意事项
+如果遇到Maven Apidoc插件无法下载时，请修改你本地的${user.home}/.m2/setting.xml，添加插件仓库：
+
+``` xml
+<pluginRepositories>
+            <pluginRepository>
+              <id>central</id>
+              <name>Maven2</name>
+                <!— 公司私服地址 —>
+              <url>http://nexus.dooioo.org/nexus/content/groups/public</url>
+              <layout>default</layout>
+              <snapshots>
+                <enabled>true</enabled>
+              </snapshots>
+              <releases>
+                <updatePolicy>never</updatePolicy>
+              </releases>
+            </pluginRepository>
+     </pluginRepositories>
+```
+
+### 注释要求
+源代码的注释必须符合我们的要求：
 ``` java
 /**
  * 客户端调用的房屋登盘申请SPI
