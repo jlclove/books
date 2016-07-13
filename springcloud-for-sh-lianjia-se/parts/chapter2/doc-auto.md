@@ -111,7 +111,7 @@ public interface HouseRegisterApplySpi {
 		 <version>1.0.0</version>
 		 <extensions>true</extensions>
 		 <configuration>
-			<options>-app "you-app” -appName "${project.name}"</options>
+			<options>-app "you-app" -appName "${project.name}"</options>
 		</configuration>
 	</plugin>
 ```
