@@ -235,9 +235,9 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
 * Internet Explorer 10内置支持。Internet Explorer 8 & 9通过XDomainRequest提供部分支持。
 * 基于WebKit的浏览器（Safari 4 及以上）
 
-服务端（资源方）通常使用`Filter`拦截请求，在过滤器里按照CORS规范解析并响应请求。Tomcat 内置了```org.apache.catalina.filters.CorsFilter```，另外，lorik-core也提供了实现：[lorik-core: CORSFilter](https://github.com/huisman6/lorik/blob/master/lorik-core/src/main/java/com/dooioo/se/lorik/core/web/filter/CORSFilter.java)。lorik的CORSFilter参考自Tomcat的实现，但提供了更好的兼容性（兼容IE8/9，Tomcat太严格，不支持）。
+服务端（资源方）通常使用`Filter`拦截请求，在过滤器里按照CORS规范解析并响应请求。Tomcat 内置了```org.apache.catalina.filters.CorsFilter```，另外，lorik-core也提供了实现：[lorik-core: CORSFilter](https://github.com/huisman6/lorik/blob/master/lorik-core/src/main/java/com/dooioo/se/lorik/core/web/filter/CORSFilter.java)。
 
-如果你想实现自己的CORSFilter，请参考 [W3c CORS 规范](http://www.w3.org/TR/cors/)。另外，请不要在拦截器里解析CORS请求，因为Tomcat会自动响应```OPTION```请求。
+如果你想实现自己的CORSFilter，请参考 [W3c CORS 规范](http://www.w3.org/TR/cors/)。另外，请不要在Spring拦截器里解析CORS请求，因为Tomcat会自动响应```OPTION```请求。
 
 #### CORS 优点和不足
 ##### CORS的优点
@@ -245,15 +245,10 @@ Access-Control-Expose-Headers: X-Intance-Id,X-Login-Token
   2. 仅配置CORS过滤器即可，业务接口无需关心跨域问题、不用改变响应数据，这一切对业务接口来说是透明的。
 
 ##### CORS的不足
-   低版本的浏览器不支持，比如IE6/IE7。  
-
-   下图是2014年1月1日-2016年1月1日国内用户的浏览器版本统计：
+   低版本的浏览器不支持，比如IE6/IE7，IE8/IE9仅提供部分支持（仅支持GET/POST)。  
+   IE10已全部支持CORS规范。
    
-   ![国内浏览器版本占比]({{book.imagePath}}/parts/chapter1/images/browsers.png)
-    
-   可以看到IE6/7已属于小众市场，可以忽略，目前主流版本IE8/9/10。
-   
-   因此**使用CORS解决跨域请求是首选**。 
+   因此，如果客户端浏览器是Chrome/Safari/FireFox/IE10，**使用CORS解决跨域请求是首选**。 
    
 ####  CORS 术语（Terminology）
  
