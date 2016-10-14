@@ -4,6 +4,9 @@ bui #Summary
 	* [微服务架构简介](parts/chapter1/microservice-summary.md)
 	* [微服务架构图](parts/chapter1/microservice-arch-img.md)
 	* [应用程序架构图](parts/chapter1/app-arch-img.md)
+	* [苍梧国地图](parts/chapter1/ort-map.md)
+	* [苍梧国简介](parts/chapter1/ort-introduction.md)
+	* [API网关](parts/chapter1/api-route.md)
 	* [mini楼盘字典](parts/chapter1/sample-project.md)
 	* [mini楼盘字典简介](parts/chapter1/mini-loupan-introduction.md)
 	* [项目结构及规范](parts/chapter1/project-structure.md)
@@ -23,4 +26,5 @@ bui #Summary
 	* [API文档自动生成](parts/chapter2/doc-auto.md)
 * [SPI 实现： Server](parts/chapter3/server-pom.md)
 	* [Spring Java Config](parts/chapter3/java-config.md)
+	* [登录迁移指南](parts/chapter3/login-migration.md)
 	
