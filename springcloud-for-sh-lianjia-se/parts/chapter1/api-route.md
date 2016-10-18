@@ -114,7 +114,7 @@ API网关是访问机房服务的桥梁，而能否访问到某个服务，则�
 API网关支持CORS规范，IE10、Chrome、FireFox、Safari浏览器可直接跨域访问接口，不需要通过Jsonp获取数据。
 
 #### Origin的限制
-CORS跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域请求的主机域名。
+跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域请求的主机域名。
 目前我们支持的域名后缀：测试环境=dooioo.net，集成环境=dooioo.org，生产环境=dooioo.com。
 
 ### 超时、重试、断路器机制
@@ -136,7 +136,7 @@ CORS跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域�
 断路器开启后，`5秒`（时间窗口）内不转发请求给后台服务。
 
 ### 测试
-测试人员可以通过API文档中心（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)： 服务- 导入到Postman - API网关简单测试，将服务接口导入到Postman，请不要手动输入接口。
+测试人员可通过API文档中心（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)： 服务- 导入到Postman - API网关简单测试，将服务接口导入Postman Chrome App，请不要手动输入接口。
 
 下面我演示如何将楼盘字典核心接口导入Postman：  
 #### 访问API文档中心
@@ -145,15 +145,15 @@ CORS跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域�
 
 #### 复制API网关简单测试里的链接 
 ![apidoc import postman]({{book.imagePath}}/parts/chapter1/images/api_doc_import_postman.png)
-#### 导入到Postman Chrome App
-打开Postman Chrome App，找到左上角的导入，在弹出的对话框中选择”From Link”，将刚才的连接粘贴到输入框，点击”Import“，关闭对话框，可在左边的集合目录里找到刚才导入的微服务。  
+#### 导入Postman Chrome App
+打开Postman Chrome App，找到左上角的导入，在弹出的对话框中选择”From Link”，将刚才的连接粘贴到输入框，点击”Import“，关闭对话框，可在左边的集合目录里找到导入的微服务。  
 ![import postman]({{book.imagePath}}/parts/chapter1/images/postman_import.png)
 
 
 ### 实时流量监控
 
 #### API网关实时流量监控
-API网关实时流量在线监控：[http://turbine.se.dooioo.com/monitor](http://turbine.se.dooioo.com/monitor)。  
+API网关实时流量查看：[http://turbine.se.dooioo.com/monitor](http://turbine.se.dooioo.com/monitor)。  
   
 集成环境将com更换为org，测试环境暂不提供此功能。
 

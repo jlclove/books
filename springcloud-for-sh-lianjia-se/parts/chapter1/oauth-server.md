@@ -17,7 +17,7 @@ OAuth Server的功能类似API网关，不过它认证的是客户端的身份�
 客户端身份通过认证之后，OAuth Server将接口请求转发到API网关。
 
 ### 颁发护照 - 客户端登记
-移动工作站欲访问部署在内网机房的接口，第一步先OAuth Server申请护照 - 登记 。
+移动工作站欲访问部署在内网机房的接口，第一步先向OAuth Server申请护照 - 登记 。
 
 您可以发送邮件或者钉钉联络OAuth Server项目的负责人，沟通相关事宜。
 
@@ -35,7 +35,7 @@ OAuth Server的功能类似API网关，不过它认证的是客户端的身份�
 
 下面我演示集成环境如何通过OAuth Server访问楼盘接口：
  `https://oroute.dooioo.net/loupan/server/v1/citys`
-#### 通过护照（clientId和clientSecret）申请access_token  
+#### 1. 通过护照（clientId和clientSecret）申请access_token  
 详细的接口文档，请参考：[OAuth2认证服务 - token (申请Token)
 ](http://api.doc.dooioo.org/v1/doc/212240510/2696765699/2081483726)。  
 注意事项：  
@@ -74,7 +74,7 @@ client_secret:f60zc3ndf1f80ac3e8a4fcavbaacn91vmf4dad7a7c5
 `expireds_in`:  access_token的有效期，单位秒，目前集成和正式环境Access Token的有效期皆为3600秒（1小时）。  
 `refresh_token`: 用于刷新的access_token的过期时间。
 
-#### 接口请求增加Request Header：Authorization
+#### 2. 接口请求增加Request Header：Authorization
 获取Access Token之后，请求接口时新增Http Request Header:
  `Authorization: Bearer 40d77f7f5bc6152092e49464294077bc`，将access_token传递给OAuth Server，进行身份校验。
  
@@ -83,7 +83,7 @@ client_secret:f60zc3ndf1f80ac3e8a4fcavbaacn91vmf4dad7a7c5
 #Http Header
 Request URL:https://oroute.dooioo.net/loupan/server/v1/citys
 Request Method:GET
-#每个接口请求必须设置Authorization请求头
+#每次接口请求必须设置Authorization请求头
 Authorization: Bearer 40d77f7f5bc6152092e49464294077bc
 
 #X-Token请求头仅限访问授权接口，其值为SSO登录接口响应的loginTicket。
@@ -138,13 +138,13 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 #### 断路器
 断路器开启条件： `10秒`内，请求次数超过`30`次，请求失败比例超过：`%65`。
   
-粗略地来说，如果某个服务10秒内有超过30个请求，但是失败了：30*0.65=18个请求，则会开启断路。
+粗略地说，如果某个服务10秒内有超过30个请求，但是失败了：30*0.65=18个请求，则会开启断路。
 
 断路器开启后，`5秒`（时间窗口）内不转发请求给后台服务。
 
 ### OAuth Server实时流量监控
 #### 获取管理接口的Token
-由于OAuth Server部署在外网，处于安全考虑，监控接口都增加了请求参数：`token`。
+由于OAuth Server部署在外网，出于安全考虑，监控接口都增加了请求参数：`token`。
 该参数值可通过接口获取：[OAuth2认证服务 - token (获取管理接口的token)
 ](http://api.doc.dooioo.org/v1/doc/212240510/2696765699/4004481326)
 
@@ -175,7 +175,7 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 ![Hystrix Dashboard intro]({{book.imagePath}}/parts/chapter1/images/turbine_dashboard_introduction.png)
 
 #### 注意事项
-通过以上方法只能查看OAuth Server单个节点的实时流量，以后可能会废弃。
+通过以上方法只能查看OAuth Server单个节点的实时流量，新版本会废弃。
 另外，管理接口生成的Token有效期为1小时，也就是说只能查看1小时的实时流量，token过期则需重新申请。
 
 ### 调试指南
@@ -212,7 +212,7 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 所有接口URI的编码字符集为：`UTF-8`，请求参数的编码字符集为：`UTF-8`。
 
 #### 并发数
-每个服务（路由）共享一个HttpClient，断路器的并发数为：100，HttpClient单节点最大并发数：200，HttpClient配置如下：
+每个服务（路由）有自己的专属HttpClient，断路器的并发数为：100，HttpClient单节点最大并发数：200，HttpClient配置如下：
 ```
 spi.httpclient:
     keepAliveInSeconds: 40
