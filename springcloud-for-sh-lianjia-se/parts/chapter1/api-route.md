@@ -41,7 +41,9 @@ Web页面请求授权接口的前提条件：
 1. 员工登录了当前页面（生成了登录SSO cookie: `login_ticket` );
 2. Ajax请求设置了请求属性： `withCredentials: true`;
 
-#### 网关负责认证，业务负责授权
+注意事项：`无须授权的接口（可公开访问的接口），请不要设置Ajax请求属性withCredentials`。
+
+#### 网关负责认证，业务方负责授权
 API网关只负责认证，授权则交给每个服务提供者。    
   
 也就是说，后端服务拿到的当前登录人（`X-Login-UserCode`和`X-Login-Company-Id`）API网关可以保证是合法的、不会被客户端伪造，至于员工能否查看某个数据，则交给业务方来处理。  
@@ -53,7 +55,7 @@ API网关只负责认证，授权则交给每个服务提供者。
 ![api route bizcode]({{book.imagePath}}/parts/chapter1/images/apiroute_bizcode.png)
 
 ### 路由
-API是访问机房服务的桥梁，而能否访问到某个服务，则取决于是否有此服务的路由信息。 
+API网关是访问机房服务的桥梁，而能否访问到某个服务，则取决于网关是否有此服务的路由信息。 
 
 路由，可理解为虚拟路径和主机IP的映射规则：
 ```
@@ -117,19 +119,19 @@ CORS跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域�
 
 ### 超时、重试、断路器机制
 #### 超时
-API网关静态路由和动态路由的Http请求读取超时时间：`7000ms`，连接超时：`5000ms`。
+通过网关路由的Http请求（静态路由和动态路由）读取超时：`7000ms`，连接超时：`5000ms`。
 #### 重试
 动态路由的Http请求（访问微服务接口），如果连接超时，默认重试一次；  
-遇到读取超时，如果请求方法为`GET/DELETE/HEAD`等幂等性方法，会重试一次，其他`POST/PUT`不会重试。
+出现读取超时，如果请求方法为`GET/DELETE/HEAD`等幂等性方法，会重试一次，其他`POST/PUT`不会重试。
 
 静态路由的Http请求不重试。
 
 #### 断路器
-动态路由的Http请求（访问微服务接口）才会应用断路器逻辑。
+动态路由的Http请求（访问微服务接口）才会适用断路器逻辑。
 
 断路器开启条件： `10秒`内，请求次数超过`30`次，请求失败比例超过：`%65`。
   
-粗略地来说，如果某个服务10秒内有超过30个请求，但是失败了：30*0.65=18个请求，则会开启断路。
+粗略地说，如果某个服务10秒内有超过30个请求，但是失败了：30*0.65=18个请求，则会开启断路。
 
 断路器开启后，`5秒`（时间窗口）内不转发请求给后台服务。
 
@@ -153,7 +155,7 @@ API网关静态路由和动态路由的Http请求读取超时时间：`7000ms`�
 #### API网关实时流量监控
 API网关实时流量在线监控：[http://turbine.se.dooioo.com/monitor](http://turbine.se.dooioo.com/monitor)。  
   
-集成环境将com更换为org，目前测试环境暂不提供此功能。
+集成环境将com更换为org，测试环境暂不提供此功能。
 
 监控指标说明：  
 
@@ -210,21 +212,21 @@ API网关响应如下：
 ### 注意事项
 #### 静态路由可能会添加多次’X-Forwarded-For’ Header。
 主要原因是，静态路由通过域名访问后端服务，会多次经过Nginx，这样获取客户端IP时，如果通过 ‘X-Forwarded-For’获取客户端IP时会取到多个IP值。
-#### 参数编码
+#### 字符编码
 所有接口URI的编码字符集为：`UTF-8`，请求参数的编码字符集为：`UTF-8`。
 #### 跨域限制
 Web页面跨域访问API网关时，Http请求Header ’Origin‘的值必须是以`dooioo.com`(正式环境)为后缀的域名，否则API网关直接响应403。
 
 #### 并发数
-动态路由的每个服务对应一个HttpClient，断路器的并发数为：100，HttpClient单节点最大并发数：150，HttpClient配置如下：
+动态路由的每个微服务都有专属的HttpClient，断路器的并发数为：100，HttpClient单节点最大并发数：150，HttpClient配置如下：
 ```
 spi.httpclient:
-    keepAliveInSeconds: 40
-    maxRoutePerHost: 150
-    maxTotal: 600
+    keepAliveInSeconds: 40 
+    maxRoutePerHost: 150  #单节点最大并发150个连接
+    maxTotal: 600   #单个服务的所有节点最大并发600个连接
 ```
 
-所有静态路由共用一个HttpClient，单个域名最大并发数：300， HttpClient配置如下：
+所有静态路由共享一个HttpClient，单个域名最大并发数：300， HttpClient配置如下：
 ```
 ##连接池总连接数1200  
 zuul.host.maxTotalConnections: 1200
